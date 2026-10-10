@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.CheckInMapper">
+
+    <resultMap type="CheckIn" id="CheckInResult">
+        <result property="id"    column="id"    />
+        <result property="checkInCode"    column="check_in_code"    />
+        <result property="title"    column="title"    />
+        <result property="elderId"    column="elder_id"    />
+        <result property="counselor"    column="counselor"    />
+        <result property="checkInTime"    column="check_in_time"    />
+        <result property="reason"    column="reason"    />
+        <result property="remark"    column="remark"    />
+        <result property="applicat"    column="applicat"    />
+        <result property="deptNo"    column="dept_no"    />
+        <result property="applicatId"    column="applicat_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="flowStatus"    column="flow_status"    />
+        <result property="status"    column="status"    />
+        <result property="otherApplyInfo"    column="other_apply_info"    />
+        <result property="reviewInfo"    column="review_info"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="elderName"    column="elder_name"    />
+        <result property="elderCardId"    column="elder_card_id"    />
+        <result property="currentTaskId"    column="current_task_id"    />
+        <result property="processId"    column="process_id"    />
+        <result property="currentTaskName"    column="current_task_name"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="evaluation"    column="evaluation"    />
+        <result property="evaluator"    column="evaluator"    />
+        <result property="approver"    column="approver"    />
+        <result property="singer"    column="singer"    />
+    </resultMap>
+
+    <sql id="selectCheckInVo">
+        select id, check_in_code, title, elder_id, counselor, check_in_time, reason, remark, applicat, dept_no, applicat_id, create_time, flow_status, status, other_apply_info, review_info, update_time, elder_name, elder_card_id, current_task_id, process_id, current_task_name, task_id, evaluation, evaluator,approver,singer from check_in
+    </sql>
+
+    <select id="selectCheckInList" parameterType="CheckIn" resultMap="CheckInResult">
+        <include refid="selectCheckInVo"/>
+        <where>
+            <if test="checkInCode != null  and checkInCode != ''"> and check_in_code = #{checkInCode}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="checkInTime != null "> and check_in_time like concat('%', #{checkInTime}, '%')</if>
+            <if test="applicat != null  and applicat != ''"> and applicat = #{applicat}</if>
+            <if test="flowStatus != null "> and flow_status = #{flowStatus}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectMyCheckInList" parameterType="CheckIn" resultMap="CheckInResult">
+        <include refid="selectCheckInVo"/>
+        <where>
+            <if test="applicatId != null"> and applicat_id = #{applicatId}</if>
+            <if test="checkInCode != null  and checkInCode != ''"> and check_in_code = #{checkInCode}</if>
+            <if test="params.beginCreateTime != null and params.endCreateTime != null"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectCheckInById" parameterType="Long" resultMap="CheckInResult">
+        <include refid="selectCheckInVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectCheckInByProcessId" resultMap="CheckInResult">
+        <include refid="selectCheckInVo"/>
+        where process_id = #{processId}
+    </select>
+
+    <select id="selectActiveByIdCard" resultType="com.lcyl.code.domain.CheckIn">
+        SELECT *
+        FROM check_in
+        WHERE JSON_EXTRACT(other_apply_info, '$.basicForm.idCard') = #{idCard}
+          AND status IN (0,1,2,3,4)
+            LIMIT 1
+    </select>
+    <select id="selectByDeptNo" resultType="java.lang.String">
+        select nick_name
+        from sys_user where dept_id = #{deptNo}
+    </select>
+    <select id="selectNickNamesByDeptName" resultType="java.lang.String">
+        select u.nick_name
+        from sys_user u
+                 inner join sys_dept d on u.dept_id = d.dept_id
+        where d.dept_name = #{deptName}
+    </select>
+    <select id="selectNickNamesByDeptNameLike" resultType="java.lang.String">
+        select u.nick_name
+        from sys_user u
+                 inner join sys_dept d on u.dept_id = d.dept_id
+        where d.dept_name like concat('%', #{deptNameKeyword}, '%')
+    </select>
+    <select id="selectUserNamesByDeptName" resultType="java.lang.String">
+        select u.user_name
+        from sys_user u
+                 inner join sys_dept d on u.dept_id = d.dept_id
+        where d.dept_name = #{deptName}
+    </select>
+    <select id="selectUserNamesByDeptNameLike" resultType="java.lang.String">
+        select u.user_name
+        from sys_user u
+                 inner join sys_dept d on u.dept_id = d.dept_id
+        where d.dept_name like concat('%', #{deptNameKeyword}, '%')
+    </select>
+    <select id="selectUserNamesByRoleNameLike" resultType="java.lang.String">
+        select distinct u.user_name
+        from sys_user u
+                 inner join sys_user_role ur on u.user_id = ur.user_id
+                 inner join sys_role r on ur.role_id = r.role_id
+        where (r.role_name like concat('%', #{roleNameKeyword}, '%')
+            or r.role_key like concat('%', #{roleNameKeyword}, '%'))
+    </select>
+    <select id="selectNickNamesByRoleNameLike" resultType="java.lang.String">
+        select distinct u.nick_name
+        from sys_user u
+                 inner join sys_user_role ur on u.user_id = ur.user_id
+                 inner join sys_role r on ur.role_id = r.role_id
+        where (r.role_name like concat('%', #{roleNameKeyword}, '%')
+            or r.role_key like concat('%', #{roleNameKeyword}, '%'))
+    </select>
+    <select id="selectDean" resultType="java.lang.String">
+        select su.nick_name
+        from sys_user su
+                 join sys_user_role sur
+                      on su.user_id = sur.user_id
+                 join sys_role sr
+                      on sur.role_id = sr.role_id
+        where sr.role_name = #{roleName}
+            LIMIT 1
+    </select>
+    <select id="selectCheckInDetailById" resultType="java.lang.String">
+        select JSON_UNQUOTE(JSON_EXTRACT(other_apply_info, '$.basicForm')) as basicForm
+        from check_in
+        where id = #{id}
+    </select>
+
+    <insert id="insertCheckIn" parameterType="CheckIn" useGeneratedKeys="true" keyProperty="id">
+    insert into check_in
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="checkInCode != null and checkInCode != ''">check_in_code,</if>
+        <if test="title != null and title != ''">title,</if>
+        <if test="elderId != null">elder_id,</if>
+        <if test="counselor != null">counselor,</if>
+        <if test="checkInTime != null">check_in_time,</if>
+        <if test="reason != null">reason,</if>
+        <if test="remark != null">remark,</if>
+        <if test="applicat != null and applicat != ''">applicat,</if>
+        <if test="deptNo != null and deptNo != ''">dept_no,</if>
+        <if test="applicatId != null">applicat_id,</if>
+        <if test="createTime != null">create_time,</if>
+        <if test="flowStatus != null">flow_status,</if>
+        <if test="status != null">status,</if>
+        <if test="otherApplyInfo != null">other_apply_info,</if>
+        <if test="reviewInfo != null">review_info,</if>
+        <if test="updateTime != null">update_time,</if>
+        <if test="elderName != null">elder_name,</if>
+        <if test="elderCardId != null">elder_card_id,</if>
+        <if test="currentTaskId != null">current_task_id,</if>
+        <if test="processId != null">process_id,</if>
+        <if test="currentTaskName != null">current_task_name,</if>
+        <if test="taskId != null">task_id,</if>
+        <if test="evaluation != null">evaluation,</if>
+        <if test="evaluator != null">evaluator,</if>
+        <if test="approver != null">approver,</if>
+        <if test="singer != null">singer,</if>
+
+    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="checkInCode != null and checkInCode != ''">#{checkInCode},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="counselor != null">#{counselor},</if>
+            <if test="checkInTime != null">#{checkInTime},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="applicat != null and applicat != ''">#{applicat},</if>
+            <if test="deptNo != null and deptNo != ''">#{deptNo},</if>
+            <if test="applicatId != null">#{applicatId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="flowStatus != null">#{flowStatus},</if>
+            <if test="status != null">#{status},</if>
+            <if test="otherApplyInfo != null">#{otherApplyInfo},</if>
+            <if test="reviewInfo != null">#{reviewInfo},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="elderName != null">#{elderName},</if>
+            <if test="elderCardId != null">#{elderCardId},</if>
+            <if test="currentTaskId != null">#{currentTaskId},</if>
+            <if test="processId != null">#{processId},</if>
+            <if test="currentTaskName != null">#{currentTaskName},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="evaluation != null">#{evaluation},</if>
+            <if test="evaluator != null">#{evaluator},</if>
+            <if test="approver != null">#{approver},</if>
+            <if test="singer != null">#{singer},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCheckIn" parameterType="CheckIn">
+    update check_in
+    <trim prefix="SET" suffixOverrides=",">
+        <if test="checkInCode != null and checkInCode != ''">check_in_code = #{checkInCode},</if>
+        <if test="title != null and title != ''">title = #{title},</if>
+        <if test="elderId != null">elder_id = #{elderId},</if>
+        <if test="counselor != null">counselor = #{counselor},</if>
+        <if test="checkInTime != null">check_in_time = #{checkInTime},</if>
+        <if test="reason != null">reason = #{reason},</if>
+        <if test="remark != null">remark = #{remark},</if>
+        <if test="applicat != null and applicat != ''">applicat = #{applicat},</if>
+        <if test="deptNo != null and deptNo != ''">dept_no = #{deptNo},</if>
+        <if test="applicatId != null">applicat_id = #{applicatId},</if>
+        <if test="createTime != null">create_time = #{createTime},</if>
+        <if test="flowStatus != null">flow_status = #{flowStatus},</if>
+        <if test="status != null">status = #{status},</if>
+        <if test="otherApplyInfo != null">other_apply_info = #{otherApplyInfo},</if>
+        <if test="reviewInfo != null">review_info = #{reviewInfo},</if>
+        <if test="updateTime != null">update_time = #{updateTime},</if>
+        <if test="elderName != null">elder_name = #{elderName},</if>
+        <if test="elderCardId != null">elder_card_id = #{elderCardId},</if>
+        <if test="currentTaskId != null">current_task_id = #{currentTaskId},</if>
+        <if test="processId != null">process_id = #{processId},</if>
+        <if test="currentTaskName != null">current_task_name = #{currentTaskName},</if>
+        <if test="taskId != null">task_id = #{taskId},</if>
+        <if test="evaluation != null">evaluation = #{evaluation},</if>
+        <if test="evaluator != null">evaluator = #{evaluator},</if>
+        <if test="approver != null">approver = #{approver},</if>
+        <if test="singer != null">singer = #{singer},</if>
+    </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCheckInById" parameterType="Long">
+        delete from check_in where id = #{id}
+    </delete>
+
+    <delete id="deleteCheckInByIds" parameterType="String">
+        delete from check_in where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectName" resultType="java.lang.String">
+        SELECT sys_dept.leader from sys_dept where sys_dept.dept_name = #{roleName}
+    </select>
+    <select id="getlevelName" resultType="java.lang.String">
+        select lnl.level_name
+        from check_in_config cic
+                 left join lc_nursing_level lnl on cic.nursing_level_id = lnl.id
+        WHERE cic.elder_id = #{elderId}
+    </select>
+
+    <select id="selectCheckInByElderId" resultType="com.lcyl.code.domain.CheckIn">
+        <include refid="selectCheckInVo"/>
+        where elder_id = #{elderId}
+    </select>
+</mapper>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             targetNamespace="http://www.activiti.org/processdef">
+
+    <process id="RetreatProcess" name="退住申请流程" isExecutable="true">
+        <startEvent id="startEvent" name="开始" />
+        <userTask id="node0" name="发起退住申请" activiti:candidateGroups="nurse" />
+        <userTask id="node1" name="护理组长审批" activiti:candidateGroups="nurse_leader" />
+        <userTask id="node2" name="法务解除合同" activiti:candidateGroups="legal_staff" />
+        <userTask id="node3" name="结算员调整账单" activiti:candidateGroups="settleman_staff" />
+        <userTask id="node4" name="结算组长审批" activiti:candidateGroups="settleman_leader" />
+        <userTask id="node5" name="副院长审批" activiti:candidateGroups="vice_dean" />
+        <userTask id="node6" name="结算员结清费用" activiti:candidateGroups="settleman_leader" />
+        <endEvent id="endEvent" name="结束" />
+
+        <exclusiveGateway id="gateway1" name="审批结果分支" />
+        <exclusiveGateway id="gateway4" name="审批结果分支" />
+        <exclusiveGateway id="gateway5" name="审批结果分支" />
+
+        <sequenceFlow id="flow0to1" sourceRef="node0" targetRef="node1" />
+        <sequenceFlow id="flow1toGateway" sourceRef="node1" targetRef="gateway1" />
+        <sequenceFlow id="gatewayToNode2" name="通过" sourceRef="gateway1" targetRef="node2">
+            <conditionExpression xsi:type="tFormalExpression">${action == 1}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="gatewayToNode0" name="驳回" sourceRef="gateway1" targetRef="node0">
+            <conditionExpression xsi:type="tFormalExpression">${action == 2}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flow2to3" sourceRef="node2" targetRef="node3" />
+        <sequenceFlow id="flow3to4" sourceRef="node3" targetRef="node4" />
+        <sequenceFlow id="flow4toGateway" sourceRef="node4" targetRef="gateway4" />
+        <sequenceFlow id="gateway4to5" name="通过" sourceRef="gateway4" targetRef="node5">
+            <conditionExpression xsi:type="tFormalExpression">${action == 1}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="gateway4to0" name="驳回" sourceRef="gateway4" targetRef="node0">
+            <conditionExpression xsi:type="tFormalExpression">${action == 2}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flow5toGateway" sourceRef="node5" targetRef="gateway5" />
+        <sequenceFlow id="gateway5to6" name="通过" sourceRef="gateway5" targetRef="node6">
+            <conditionExpression xsi:type="tFormalExpression">${action == 1}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="gateway5to0" name="驳回" sourceRef="gateway5" targetRef="node0">
+            <conditionExpression xsi:type="tFormalExpression">${action == 2}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flow6toEnd" sourceRef="node6" targetRef="endEvent" />
+        <sequenceFlow id="startToNode0" sourceRef="startEvent" targetRef="node0" />
+    </process>
+
+    <bpmndi:BPMNDiagram id="BPMNDiagram_Retreat">
+        <bpmndi:BPMNPlane id="BPMNPlane_Retreat" bpmnElement="RetreatProcess">
+            <bpmndi:BPMNShape id="shape_start" bpmnElement="startEvent">
+                <dc:Bounds x="100" y="200" width="36" height="36" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_node0" bpmnElement="node0">
+                <dc:Bounds x="200" y="180" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_node1" bpmnElement="node1">
+                <dc:Bounds x="350" y="180" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_gateway1" bpmnElement="gateway1">
+                <dc:Bounds x="500" y="200" width="40" height="40" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_node2" bpmnElement="node2">
+                <dc:Bounds x="600" y="180" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_node3" bpmnElement="node3">
+                <dc:Bounds x="750" y="180" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_node4" bpmnElement="node4">
+                <dc:Bounds x="900" y="180" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_gateway4" bpmnElement="gateway4">
+                <dc:Bounds x="1050" y="200" width="40" height="40" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_node5" bpmnElement="node5">
+                <dc:Bounds x="1150" y="180" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_gateway5" bpmnElement="gateway5">
+                <dc:Bounds x="1300" y="200" width="40" height="40" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_node6" bpmnElement="node6">
+                <dc:Bounds x="1400" y="180" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="shape_end" bpmnElement="endEvent">
+                <dc:Bounds x="1550" y="200" width="36" height="36" />
+            </bpmndi:BPMNShape>
+
+            <bpmndi:BPMNEdge id="edge_start0" bpmnElement="startToNode0">
+                <di:waypoint x="136" y="218" />
+                <di:waypoint x="200" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_0_1" bpmnElement="flow0to1">
+                <di:waypoint x="300" y="220" />
+                <di:waypoint x="350" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_1_gw1" bpmnElement="flow1toGateway">
+                <di:waypoint x="450" y="220" />
+                <di:waypoint x="500" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_gw1_2" bpmnElement="gatewayToNode2">
+                <di:waypoint x="540" y="220" />
+                <di:waypoint x="600" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_gw1_0" bpmnElement="gatewayToNode0">
+                <di:waypoint x="520" y="240" />
+                <di:waypoint x="520" y="300" />
+                <di:waypoint x="250" y="300" />
+                <di:waypoint x="250" y="260" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_2_3" bpmnElement="flow2to3">
+                <di:waypoint x="700" y="220" />
+                <di:waypoint x="750" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_3_4" bpmnElement="flow3to4">
+                <di:waypoint x="850" y="220" />
+                <di:waypoint x="900" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_4_gw4" bpmnElement="flow4toGateway">
+                <di:waypoint x="1000" y="220" />
+                <di:waypoint x="1050" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_gw4_5" bpmnElement="gateway4to5">
+                <di:waypoint x="1090" y="220" />
+                <di:waypoint x="1150" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_gw4_0" bpmnElement="gateway4to0">
+                <di:waypoint x="1070" y="240" />
+                <di:waypoint x="1070" y="320" />
+                <di:waypoint x="250" y="320" />
+                <di:waypoint x="250" y="260" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_5_gw5" bpmnElement="flow5toGateway">
+                <di:waypoint x="1250" y="220" />
+                <di:waypoint x="1300" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_gw5_6" bpmnElement="gateway5to6">
+                <di:waypoint x="1340" y="220" />
+                <di:waypoint x="1400" y="220" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_gw5_0" bpmnElement="gateway5to0">
+                <di:waypoint x="1320" y="240" />
+                <di:waypoint x="1320" y="340" />
+                <di:waypoint x="250" y="340" />
+                <di:waypoint x="250" y="260" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="edge_6_end" bpmnElement="flow6toEnd">
+                <di:waypoint x="1500" y="220" />
+                <di:waypoint x="1550" y="218" />
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

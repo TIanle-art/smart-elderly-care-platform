@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcCheckinEvaluateReportMapper">
+    
+    <resultMap type="LcCheckinEvaluateReport" id="LcCheckinEvaluateReportResult">
+        <result property="id"    column="id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="reportContent"    column="report_content"    />
+        <result property="reportNo"    column="report_no"    />
+        <result property="reportTime"    column="report_time"    />
+        <result property="doctorSign"    column="doctor_sign"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectLcCheckinEvaluateReportVo">
+        select id, apply_id, report_content, report_no, report_time, doctor_sign, del_flag, create_by, create_time from lc_checkin_evaluate_report
+    </sql>
+
+    <select id="selectLcCheckinEvaluateReportList" parameterType="LcCheckinEvaluateReport" resultMap="LcCheckinEvaluateReportResult">
+        <include refid="selectLcCheckinEvaluateReportVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="reportContent != null  and reportContent != ''"> and report_content = #{reportContent}</if>
+            <if test="reportNo != null  and reportNo != ''"> and report_no = #{reportNo}</if>
+            <if test="reportTime != null "> and report_time = #{reportTime}</if>
+            <if test="doctorSign != null  and doctorSign != ''"> and doctor_sign = #{doctorSign}</if>
+        </where>
+    </select>
+    
+    <select id="selectLcCheckinEvaluateReportById" parameterType="Long" resultMap="LcCheckinEvaluateReportResult">
+        <include refid="selectLcCheckinEvaluateReportVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcCheckinEvaluateReport" parameterType="LcCheckinEvaluateReport" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_checkin_evaluate_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">apply_id,</if>
+            <if test="reportContent != null">report_content,</if>
+            <if test="reportNo != null">report_no,</if>
+            <if test="reportTime != null">report_time,</if>
+            <if test="doctorSign != null">doctor_sign,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">#{applyId},</if>
+            <if test="reportContent != null">#{reportContent},</if>
+            <if test="reportNo != null">#{reportNo},</if>
+            <if test="reportTime != null">#{reportTime},</if>
+            <if test="doctorSign != null">#{doctorSign},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcCheckinEvaluateReport" parameterType="LcCheckinEvaluateReport">
+        update lc_checkin_evaluate_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null">apply_id = #{applyId},</if>
+            <if test="reportContent != null">report_content = #{reportContent},</if>
+            <if test="reportNo != null">report_no = #{reportNo},</if>
+            <if test="reportTime != null">report_time = #{reportTime},</if>
+            <if test="doctorSign != null">doctor_sign = #{doctorSign},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcCheckinEvaluateReportById" parameterType="Long">
+        delete from lc_checkin_evaluate_report where id = #{id}
+    </delete>
+
+    <delete id="deleteLcCheckinEvaluateReportByIds" parameterType="String">
+        delete from lc_checkin_evaluate_report where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

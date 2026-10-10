@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcCheckinApproveRecordMapper">
+    
+    <resultMap type="LcCheckinApproveRecord" id="LcCheckinApproveRecordResult">
+        <result property="id"    column="id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="approverId"    column="approver_id"    />
+        <result property="approverName"    column="approver_name"    />
+        <result property="approveNode"    column="approve_node"    />
+        <result property="approveResult"    column="approve_result"    />
+        <result property="approveOpinion"    column="approve_opinion"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectLcCheckinApproveRecordVo">
+        select id, apply_id, approver_id, approver_name, approve_node, approve_result, approve_opinion, approve_time, del_flag from lc_checkin_approve_record
+    </sql>
+
+    <select id="selectLcCheckinApproveRecordList" parameterType="LcCheckinApproveRecord" resultMap="LcCheckinApproveRecordResult">
+        <include refid="selectLcCheckinApproveRecordVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="approverId != null "> and approver_id = #{approverId}</if>
+            <if test="approverName != null  and approverName != ''"> and approver_name like concat('%', #{approverName}, '%')</if>
+            <if test="approveNode != null  and approveNode != ''"> and approve_node = #{approveNode}</if>
+            <if test="approveResult != null  and approveResult != ''"> and approve_result = #{approveResult}</if>
+            <if test="approveOpinion != null  and approveOpinion != ''"> and approve_opinion = #{approveOpinion}</if>
+            <if test="approveTime != null "> and approve_time = #{approveTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLcCheckinApproveRecordById" parameterType="Long" resultMap="LcCheckinApproveRecordResult">
+        <include refid="selectLcCheckinApproveRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcCheckinApproveRecord" parameterType="LcCheckinApproveRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_checkin_approve_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">apply_id,</if>
+            <if test="approverId != null">approver_id,</if>
+            <if test="approverName != null">approver_name,</if>
+            <if test="approveNode != null">approve_node,</if>
+            <if test="approveResult != null">approve_result,</if>
+            <if test="approveOpinion != null">approve_opinion,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">#{applyId},</if>
+            <if test="approverId != null">#{approverId},</if>
+            <if test="approverName != null">#{approverName},</if>
+            <if test="approveNode != null">#{approveNode},</if>
+            <if test="approveResult != null">#{approveResult},</if>
+            <if test="approveOpinion != null">#{approveOpinion},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcCheckinApproveRecord" parameterType="LcCheckinApproveRecord">
+        update lc_checkin_approve_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null">apply_id = #{applyId},</if>
+            <if test="approverId != null">approver_id = #{approverId},</if>
+            <if test="approverName != null">approver_name = #{approverName},</if>
+            <if test="approveNode != null">approve_node = #{approveNode},</if>
+            <if test="approveResult != null">approve_result = #{approveResult},</if>
+            <if test="approveOpinion != null">approve_opinion = #{approveOpinion},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcCheckinApproveRecordById" parameterType="Long">
+        delete from lc_checkin_approve_record where id = #{id}
+    </delete>
+
+    <delete id="deleteLcCheckinApproveRecordByIds" parameterType="String">
+        delete from lc_checkin_approve_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,268 @@
+/* 你原来的所有样式 100% 不变 */
+.container {
+  background: #F7F6FB;
+  min-height: 100vh;
+  padding-bottom: 100rpx;
+}
+
+.item_img {
+  width: 100%;
+  display: block;
+}
+
+.info {
+  padding: 30rpx;
+}
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #151515;
+  display: block;
+}
+.desc {
+  font-size: 14px;
+  color: #777;
+  margin: 10rpx 0;
+  line-height: 1.6;
+  display: block;
+}
+
+
+.form-item {
+  margin: 20rpx 30rpx;
+  padding: 30rpx;
+  background: #F7F6F7;
+  border-radius: 12rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.label {
+  font-size: 16px;
+  color: #151515;
+}
+.required {
+  font-size: 12px;
+  color: #F56C6C;
+  margin-left: 8rpx;
+}
+.value {
+  font-size: 16px;
+  color: #999;
+}
+
+.buy-btn {
+  background: #FE6A3D;
+  color: #fff;
+  border-radius: 50rpx;
+  padding: 24rpx;
+  margin: 60rpx 30rpx 0;
+  width: calc(100% - 60rpx);
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+}
+.buy-btn.disabled {
+  background: #D3D3D3;
+  color: #fff;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+.popup-content {
+  background: #fff;
+  width: 80%;
+  border-radius: 20rpx;
+  padding: 50rpx 30rpx;
+  text-align: center;
+}
+.popup-title {
+  font-size: 18px;
+  color: #151515;
+  display: block;
+  margin-bottom: 40rpx;
+}
+.bind-btn {
+  color: #FE6A3D;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+}
+
+.time-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+.time-popup-mask {
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+.time-popup-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 20rpx 20rpx 0 0;
+  padding: 30rpx 24rpx;
+}
+.time-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #F4F4F4;
+}
+.time-popup-header text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #151515;
+}
+.close {
+  font-size: 24px;
+  color: #151515;
+}
+.time-picker {
+  height: 300rpx;
+  margin: 20rpx 0;
+}
+.picker-item {
+  text-align: center;
+  font-size: 18px;
+  line-height: 60rpx;
+  color: #666;
+}
+.confirm-btn {
+  background: #FE6A3D;
+  color: #fff;
+  border-radius: 50rpx;
+  padding: 26rpx;
+  margin-top: 20rpx;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+}
+
+.picker-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+.picker-mask {
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+.picker-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 20rpx 20rpx 0 0;
+  max-height: 60vh;
+}
+.picker-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 30rpx;
+  font-size: 16px;
+  border-bottom: 1rpx solid #eee;
+}
+.picker-body {
+  max-height: 40vh;
+}
+
+.picker-item {
+  padding: 30rpx;
+  text-align: center;
+  font-size: 16px;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+/* ================== 新增：无家人弹窗样式 ================== */
+.empty-family-modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 9999;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.modal-mask {
+position: absolute;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.5);
+}
+.modal-box {
+width: 70%;
+background: #fff;
+border-radius: 20rpx;
+padding: 60rpx 40rpx 40rpx;
+display: flex;
+flex-direction: column;
+align-items: center;
+position: relative;
+z-index: 10000;
+}
+.modal-text {
+font-size: 32rpx;
+color: #333;
+margin-bottom: 50rpx;
+font-weight: 500;
+}
+.modal-btn {
+background: #FE6A3D !important;
+color: #fff !important;
+border-radius: 50rpx !important;
+padding: 16rpx 60rpx !important;
+font-size: 30rpx !important;
+border: none !important;
+font-weight: bold;
+}
+.modal-btn::after {
+border: none !important;
+content: none !important;
+}
+/* 🔥 价格同一行不换行 + 单位灰色小字号 */
+
+/* 🔥 价格行 + 立即购买（核心优化） */
+.price {
+  font-size: 36rpx;
+  color: #FE6A3D;
+  font-weight: bold;
+  display: flex;
+  align-items: baseline; /* 文字底线对齐，最精致 */
+  white-space: nowrap;
+}
+.price-unit {
+  color: #999999;
+  font-size: 20rpx;
+  font-weight: normal;
+  margin-left: 0rpx; /* 🔥 距离缩到最小 */
+  padding: 0;
+  border: none;
+  vertical-align: baseline;
+}

@@ -1,0 +1,51 @@
+<!--home/pages/customVisit/customVisit.wxml-->
+<view class="contain">
+  <view class="info">
+    <view class="form-item">
+      <text class="label">预约人姓名:</text>
+      <input class="input" placeholder="请输入预约人姓名" bindinput="onNameInput" required />
+    </view>
+
+    <view class="form-item">
+      <text class="label">预约人手机号:</text>
+      <input class="input" placeholder="请输入手机号" type="number" bindinput="onPhoneInput" required />
+    </view>
+
+    
+
+    <view class="form-item date-item">
+      <text class="label">预约日期:</text>
+      <!-- 这里修改：start 动态绑定今天，不能选更早日期 -->
+      <picker mode="date" value="{{date}}" start="{{today}}" end="2030-12-31" bindchange="onDateChange">
+        <view class="picker-text">{{date || '请选择日期'}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="selectTime">
+    <view class="time-tabs {{timeDisabled ? 'disabled-tabs' : ''}}">
+      <view class="tab {{period === 'morning' ? 'active' : ''}}" bindtap="switchPeriod" data-period="morning">
+        08:00-12:00
+      </view>
+      <view class="tab {{period === 'afternoon' ? 'active' : ''}}" bindtap="switchPeriod" data-period="afternoon">
+        12:30-18:00
+      </view>
+    </view>
+
+    <view class="time-list {{timeDisabled ? 'disabled-list' : ''}}">
+      <block wx:if="{{period === 'morning'}}">
+        <view class="time-item {{disabledTimeList.includes(item) ? 'disabled' : ''}} {{selectedTime === item ? 'active' : ''}}" wx:for="{{morningTimes}}" wx:key="*this" bindtap="selectTime" data-time="{{item}}">
+          {{item}}
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="time-item {{disabledTimeList.includes(item) ? 'disabled' : ''}} {{selectedTime === item ? 'active' : ''}}" wx:for="{{afternoonTimes}}" wx:key="*this" bindtap="selectTime" data-time="{{item}}">
+          {{item}}
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <button class="submit-btn" bindtap="submitBooking">预约</button>
+</view>

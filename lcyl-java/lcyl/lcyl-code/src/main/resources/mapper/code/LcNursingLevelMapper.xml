@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcNursingLevelMapper">
+    
+    <resultMap type="LcNursingLevel" id="NursingLevelResult">
+        <result property="id"    column="id"    />
+        <result property="levelName"    column="level_name"    />
+        <result property="planId"    column="plan_id"    />
+        <result property="monthlyFee"    column="monthly_fee"    />
+        <result property="levelDesc"    column="level_desc"    />
+        <result property="status"    column="status"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="creatorName"    column="creator_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectNursingLevelVo">
+        select id, level_name, plan_id, monthly_fee, level_desc, status, creator_id, creator_name, create_time, update_time from lc_nursing_level
+    </sql>
+
+    <select id="selectNursingLevelList" parameterType="LcNursingLevel" resultMap="NursingLevelResult">
+        SELECT
+        nl.id,
+        nl.level_name,
+        nl.plan_id,
+        np.plan_name AS planName,
+        nl.monthly_fee,
+        nl.level_desc,
+        nl.status,
+        nl.creator_id,
+        nl.creator_name,
+        nl.create_time,
+        nl.update_time
+        FROM lc_nursing_level nl
+        LEFT JOIN lc_nursing_plan np ON nl.plan_id = np.id
+        <where>
+            <if test="levelName != null and levelName != ''">
+                AND nl.level_name LIKE CONCAT('%', #{levelName}, '%')
+            </if>
+            <if test="status != null">
+                AND nl.status = #{status}
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectNursingLevelById" parameterType="Long" resultMap="NursingLevelResult">
+        <include refid="selectNursingLevelVo"/>
+        where id = #{id}
+    </select>
+    <select id="countLevelName" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM lc_nursing_level
+        WHERE level_name = #{levelName}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
+    <select id="countByNursingLevelId" resultType="java.lang.Integer">
+        select COUNT(1) FROM check_in_config WHERE nursing_level_id = #{NursingLevelId}
+    </select>
+
+    <insert id="insertNursingLevel" parameterType="LcNursingLevel" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_nursing_level
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="levelName != null and levelName != ''">level_name,</if>
+            <if test="planId != null">plan_id,</if>
+            <if test="monthlyFee != null">monthly_fee,</if>
+            <if test="levelDesc != null">level_desc,</if>
+            <if test="status != null">status,</if>
+            <if test="creatorId != null">creator_id,</if>
+            <if test="creatorName != null">creator_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="levelName != null and levelName != ''">#{levelName},</if>
+            <if test="planId != null">#{planId},</if>
+            <if test="monthlyFee != null">#{monthlyFee},</if>
+            <if test="levelDesc != null">#{levelDesc},</if>
+            <if test="status != null">#{status},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="creatorName != null">#{creatorName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNursingLevel" parameterType="LcNursingLevel">
+        update lc_nursing_level
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="levelName != null and levelName != ''">level_name = #{levelName},</if>
+            <if test="planId != null">plan_id = #{planId},</if>
+            <if test="monthlyFee != null">monthly_fee = #{monthlyFee},</if>
+            <if test="levelDesc != null">level_desc = #{levelDesc},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="creatorId != null">creator_id = #{creatorId},</if>
+            <if test="creatorName != null">creator_name = #{creatorName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNursingLevelById" parameterType="Long">
+        delete from lc_nursing_level where id = #{id}
+    </delete>
+
+    <delete id="deleteNursingLevelByIds" parameterType="String">
+        delete from lc_nursing_level where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

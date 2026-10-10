@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcCheckinApplyMapper">
+    
+    <resultMap type="LcCheckinApply" id="LcCheckinApplyResult">
+        <result property="applyId"    column="apply_id"    />
+        <result property="applyNo"    column="apply_no"    />
+        <result property="applyUserId"    column="apply_user_id"    />
+        <result property="applyUserName"    column="apply_user_name"    />
+        <result property="applyStatus"    column="apply_status"    />
+        <result property="processInstanceId"    column="process_instance_id"    />
+        <result property="rejectReason"    column="reject_reason"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectLcCheckinApplyVo">
+        select apply_id, apply_no, apply_user_id, apply_user_name, apply_status, process_instance_id, reject_reason, del_flag, create_by, create_time, update_by, update_time from lc_checkin_apply
+    </sql>
+
+    <select id="selectLcCheckinApplyList" parameterType="LcCheckinApply" resultMap="LcCheckinApplyResult">
+        <include refid="selectLcCheckinApplyVo"/>
+        <where>  
+            <if test="applyNo != null  and applyNo != ''"> and apply_no = #{applyNo}</if>
+            <if test="applyUserId != null "> and apply_user_id = #{applyUserId}</if>
+            <if test="applyUserName != null  and applyUserName != ''"> and apply_user_name like concat('%', #{applyUserName}, '%')</if>
+            <if test="applyStatus != null  and applyStatus != ''"> and apply_status = #{applyStatus}</if>
+            <if test="processInstanceId != null  and processInstanceId != ''"> and process_instance_id = #{processInstanceId}</if>
+            <if test="rejectReason != null  and rejectReason != ''"> and reject_reason = #{rejectReason}</if>
+        </where>
+    </select>
+    
+    <select id="selectLcCheckinApplyByApplyId" parameterType="Long" resultMap="LcCheckinApplyResult">
+        <include refid="selectLcCheckinApplyVo"/>
+        where apply_id = #{applyId}
+    </select>
+
+    <insert id="insertLcCheckinApply" parameterType="LcCheckinApply" useGeneratedKeys="true" keyProperty="applyId">
+        insert into lc_checkin_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyNo != null and applyNo != ''">apply_no,</if>
+            <if test="applyUserId != null">apply_user_id,</if>
+            <if test="applyUserName != null">apply_user_name,</if>
+            <if test="applyStatus != null">apply_status,</if>
+            <if test="processInstanceId != null">process_instance_id,</if>
+            <if test="rejectReason != null">reject_reason,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyNo != null and applyNo != ''">#{applyNo},</if>
+            <if test="applyUserId != null">#{applyUserId},</if>
+            <if test="applyUserName != null">#{applyUserName},</if>
+            <if test="applyStatus != null">#{applyStatus},</if>
+            <if test="processInstanceId != null">#{processInstanceId},</if>
+            <if test="rejectReason != null">#{rejectReason},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcCheckinApply" parameterType="LcCheckinApply">
+        update lc_checkin_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyNo != null and applyNo != ''">apply_no = #{applyNo},</if>
+            <if test="applyUserId != null">apply_user_id = #{applyUserId},</if>
+            <if test="applyUserName != null">apply_user_name = #{applyUserName},</if>
+            <if test="applyStatus != null">apply_status = #{applyStatus},</if>
+            <if test="processInstanceId != null">process_instance_id = #{processInstanceId},</if>
+            <if test="rejectReason != null">reject_reason = #{rejectReason},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where apply_id = #{applyId}
+    </update>
+
+    <delete id="deleteLcCheckinApplyByApplyId" parameterType="Long">
+        delete from lc_checkin_apply where apply_id = #{applyId}
+    </delete>
+
+    <delete id="deleteLcCheckinApplyByApplyIds" parameterType="String">
+        delete from lc_checkin_apply where apply_id in 
+        <foreach item="applyId" collection="array" open="(" separator="," close=")">
+            #{applyId}
+        </foreach>
+    </delete>
+
+    <select id="selectCheckinHomeList" resultType="com.lcyl.code.vo.CheckinHomeVO">
+        SELECT
+        a.apply_id AS applyId,
+        a.apply_no AS applyNo,
+        b.elderly_name AS elderlyName,
+        b.id_card AS idCard,
+        e.bed_no AS bedNo,
+        a.create_time AS createTime,
+        a.apply_user_name AS createBy,
+        f.checkin_time AS checkinTime,
+        -- 详情页扩展字段
+        b.phone AS phone,
+        b.gender AS gender,
+        b.age AS age,
+        e.care_fee AS careFee,
+        e.room_fee AS roomFee,
+        e.total_fee AS totalFee,
+        f.contract_no AS contractNo,
+        f.sign_time AS signTime,
+        f.pay_status AS payStatus
+        FROM lc_checkin_apply a
+        LEFT JOIN lc_checkin_basic b ON a.apply_id = b.apply_id AND b.del_flag = '0'
+        LEFT JOIN lc_checkin_config e ON a.apply_id = e.apply_id AND e.del_flag = '0'
+        LEFT JOIN lc_checkin_contract f ON a.apply_id = f.apply_id AND f.del_flag = '0'
+        WHERE a.del_flag = '0'
+        -- 原型核心规则：仅展示已审批通过/已入住数据
+        AND a.apply_status = '09'
+        -- 精准搜索：单据编号
+        <if test="apply.applyNo != null and apply.applyNo != ''">
+            AND a.apply_no = #{apply.applyNo}
+        </if>
+        -- 精准搜索：身份证号
+        <if test="apply.idCard != null and apply.idCard != ''">
+            AND b.id_card = #{apply.idCard}
+        </if>
+        -- 模糊搜索：老人姓名
+        <if test="apply.elderlyName != null and apply.elderlyName != ''">
+            AND b.elderly_name LIKE CONCAT('%', #{apply.elderlyName}, '%')
+        </if>
+        -- 日期范围：入住日期
+        <if test="beginTime != null">
+            AND f.checkin_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND f.checkin_time &lt;= #{endTime}
+        </if>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!-- 新增：查看详情查询 -->
+    <select id="selectCheckinDetail" parameterType="Long" resultType="com.lcyl.code.vo.CheckinHomeVO">
+        SELECT
+            a.apply_id AS applyId,
+            a.apply_no AS applyNo,
+            b.elderly_name AS elderlyName,
+            b.id_card AS idCard,
+            e.bed_no AS bedNo,
+            a.create_time AS createTime,
+            a.apply_user_name AS createBy,
+            f.checkin_time AS checkinTime,
+            b.phone AS phone,
+            b.gender AS gender,
+            b.age AS age,
+            e.care_fee AS careFee,
+            e.room_fee AS roomFee,
+            e.total_fee AS totalFee,
+            f.contract_no AS contractNo,
+            f.sign_time AS signTime,
+            f.pay_status AS payStatus
+        FROM lc_checkin_apply a
+                 LEFT JOIN lc_checkin_basic b ON a.apply_id = b.apply_id AND b.del_flag = '0'
+                 LEFT JOIN lc_checkin_config e ON a.apply_id = e.apply_id AND e.del_flag = '0'
+                 LEFT JOIN lc_checkin_contract f ON a.apply_id = f.apply_id AND f.del_flag = '0'
+        WHERE a.apply_id = #{applyId} AND a.del_flag = '0'
+    </select>
+</mapper>

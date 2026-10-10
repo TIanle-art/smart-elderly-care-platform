@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.NursingPlanItemMapper">
+    
+    <resultMap type="NursingPlanItem" id="NursingPlanItemResult">
+        <result property="id"    column="id"    />
+        <result property="planId"    column="plan_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="expectedTime"    column="expected_time"    />
+        <result property="executeCycle"    column="execute_cycle"    />
+        <result property="executeTimes"    column="execute_times"    />
+    </resultMap>
+
+    <sql id="selectNursingPlanItemVo">
+        select id, plan_id, item_id, expected_Time, execute_cycle, execute_times from lc_nursing_plan_item
+    </sql>
+
+    <select id="selectNursingPlanItemList" parameterType="NursingPlanItem" resultMap="NursingPlanItemResult">
+        <include refid="selectNursingPlanItemVo"/>
+        <where>  
+            <if test="planId != null "> and plan_id = #{planId}</if>
+            <if test="itemId != null "> and item_id = #{itemId}</if>
+            <if test="expectedTime != null "> and expected_time = #{expectedTime}</if>
+            <if test="executeCycle != null  and executeCycle != ''"> and execute_cycle = #{executeCycle}</if>
+            <if test="executeTimes != null "> and execute_times = #{executeTimes}</if>
+        </where>
+    </select>
+    
+    <select id="selectNursingPlanItemById" parameterType="Long" resultMap="NursingPlanItemResult">
+        <include refid="selectNursingPlanItemVo"/>
+        where id = #{id}
+    </select>
+    <select id="countByItemId" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM lc_nursing_plan_item WHERE item_id = #{itemId}
+    </select>
+
+    <insert id="insertNursingPlanItem" parameterType="NursingPlanItem" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_nursing_plan_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planId != null">plan_id,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="expectedTime != null">expected_time,</if>
+            <if test="executeCycle != null and executeCycle != ''">execute_cycle,</if>
+            <if test="executeTimes != null">execute_times,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planId != null">#{planId},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="expectedTime != null">#{expectedTime},</if>
+            <if test="executeCycle != null and executeCycle != ''">#{executeCycle},</if>
+            <if test="executeTimes != null">#{executeTimes},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNursingPlanItem" parameterType="NursingPlanItem">
+        update lc_nursing_plan_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planId != null">plan_id = #{planId},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="expectedTime != null">expected_time = #{expectedTime},</if>
+            <if test="executeCycle != null and executeCycle != ''">execute_cycle = #{executeCycle},</if>
+            <if test="executeTimes != null">execute_times = #{executeTimes},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNursingPlanItemById" parameterType="Long">
+        delete from lc_nursing_plan_item where id = #{id}
+    </delete>
+
+    <delete id="deleteNursingPlanItemByIds" parameterType="String">
+        delete from lc_nursing_plan_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

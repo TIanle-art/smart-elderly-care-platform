@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.system.mapper.LcRoomMapper">
+
+    <resultMap type="Room" id="LcRoomResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="sort"    column="sort"    />
+        <result property="floorId"    column="floor_id"    />
+        <result property="price"    column="price"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="roomTypeId"    column="room_type_id"    />
+    </resultMap>
+
+    <sql id="selectLcRoomVo">
+        select id, code, sort, floor_id, price, create_by, update_by, remark, create_time, update_time, room_type_id from lc_room
+    </sql>
+
+    <select id="selectLcRoomList" parameterType="Room" resultMap="LcRoomResult">
+        <include refid="selectLcRoomVo"/>
+        <where>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="floorId != null "> and floor_id = #{floorId}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="roomTypeId != null "> and room_type_id = #{roomTypeId}</if>
+        </where>
+    </select>
+
+    <select id="selectLcRoomById" parameterType="Long" resultMap="LcRoomResult">
+        <include refid="selectLcRoomVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcRoom" parameterType="Room" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_room
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="floorId != null">floor_id,</if>
+            <if test="roomTypeId != null">room_type_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="code != null">code,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="floorId != null">#{floorId},</if>
+            <if test="roomTypeId != null">#{roomTypeId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="code != null">#{code},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updateLcRoom" parameterType="Room">
+        update lc_room
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="floorId != null">floor_id = #{floorId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="roomTypeId != null">room_type_id = #{roomTypeId},</if>
+            <if test="code != null">code = #{code},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcRoomById" parameterType="Long">
+        delete from lc_room where id = #{id}
+    </delete>
+
+    <delete id="deleteLcRoomByIds" parameterType="String">
+        delete from lc_room where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

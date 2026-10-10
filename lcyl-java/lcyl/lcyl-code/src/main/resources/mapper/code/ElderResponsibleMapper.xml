@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.ElderResponsibleMapper">
+
+    <resultMap type="ElderResponsible" id="ElderResponsibleResult">
+        <result property="elderId" column="elder_id"/>
+        <result property="elderName" column="elder_name"/>
+        <result property="floorId" column="floor_id"/>
+        <result property="floorName" column="floor_name"/>
+        <result property="roomId" column="room_id"/>
+        <result property="roomCode" column="room_code"/>
+        <result property="bedId" column="bed_id"/>
+        <result property="bedNumber" column="bed_number"/>
+        <result property="status" column="status"/>
+        <result property="nurseNames" column="nurse_names"/>
+    </resultMap>
+
+    <select id="selectMyElderList" parameterType="Long" resultMap="ElderResponsibleResult">
+        SELECT
+            e.id AS elder_id,
+            e.name AS elder_name,
+            f.id AS floor_id,
+            f.name AS floor_name,
+            r.id AS room_id,
+            r.code AS room_code,
+            b.id AS bed_id,
+            b.bed_number,
+            e.status,
+            (
+                SELECT GROUP_CONCAT(DISTINCT n2.name SEPARATOR ' ')
+                FROM lc_elder_nurse_assign ena2
+                         LEFT JOIN lc_nurse n2 ON ena2.nurse_id = n2.id
+                WHERE ena2.elder_id = e.id
+            ) AS nurse_names
+        FROM elder e
+                 LEFT JOIN bed b ON e.bed_id = b.id
+                 LEFT JOIN lc_room r ON b.room_id = r.id
+                 LEFT JOIN lc_floor f ON r.floor_id = f.id
+                 LEFT JOIN lc_elder_nurse_assign ena ON e.id = ena.elder_id
+        WHERE ena.nurse_id = #{userId}
+        GROUP BY e.id, b.id
+        ORDER BY f.id ASC, CAST(r.code AS UNSIGNED) ASC
+    </select>
+
+    <delete id="deleteByElderId" parameterType="Long">
+        DELETE FROM lc_elder_nurse_assign WHERE elder_id = #{elderId}
+    </delete>
+
+    <insert id="insertAssign">
+        INSERT INTO lc_elder_nurse_assign (elder_id, nurse_id)
+        VALUES
+        <foreach collection="nurseIds" item="id" separator=",">
+            (#{elderId}, #{id})
+        </foreach>
+    </insert>
+
+    <select id="selectElderIdsByRoomId" parameterType="Long" resultType="java.lang.Long">
+        SELECT e.id
+        FROM elder e
+                 LEFT JOIN bed b ON e.bed_id = b.id
+        WHERE b.room_id = #{roomId}
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="deleteByElderIds">
+        DELETE FROM lc_elder_nurse_assign WHERE elder_id IN
+        <foreach collection="elderIds" item="elderId" open="(" separator="," close=")">
+            #{elderId}
+        </foreach>
+    </delete>
+    <!-- 批量插入（房间用） -->
+    <insert id="batchInsertAssign">
+        INSERT INTO lc_elder_nurse_assign (elder_id, nurse_id)
+        VALUES
+        <foreach collection="elderIds" item="elderId" separator=",">
+            <foreach collection="nurseIds" item="nurseId" separator=",">
+                (#{elderId}, #{nurseId})
+            </foreach>
+        </foreach>
+    </insert>
+</mapper>

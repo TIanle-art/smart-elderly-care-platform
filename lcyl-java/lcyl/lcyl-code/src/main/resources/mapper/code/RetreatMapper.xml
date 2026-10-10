@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.RetreatMapper">
+
+    <resultMap type="com.lcyl.code.domain.Retreat" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="retreatCode" column="retreat_code"/>
+        <result property="title" column="title"/>
+        <result property="elderId" column="elder_id"/>
+        <result property="name" column="name"/>
+        <result property="idCardNo" column="id_card_no"/>
+        <result property="phone" column="phone"/>
+        <result property="checkInStartTime" column="check_in_start_time"/>
+        <result property="checkInEndTime" column="check_in_end_time"/>
+        <result property="nursingLevelName" column="nursing_level_name"/>
+        <result property="bedNo" column="bed_no"/>
+        <result property="contractName" column="contract_name"/>
+        <result property="contractUrl" column="contract_url"/>
+        <result property="contractNo" column="contract_no"/>
+        <result property="counselor" column="counselor"/>
+        <result property="nursingName" column="nursing_name"/>
+        <result property="checkOutTime" column="check_out_time"/>
+        <result property="reason" column="reason"/>
+        <result property="remark" column="remark"/>
+        <result property="applicat" column="applicat"/>
+        <result property="applicatId" column="applicat_id"/>
+        <result property="deptNo" column="dept_no"/>
+        <result property="createTime" column="create_time"/>
+        <result property="flowStatus" column="flow_status"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="processInstanceId" column="process_instance_id"/>
+    </resultMap>
+
+    <!-- 条件分页查询 -->
+    <select id="selectRetreatList" resultMap="BaseResultMap">
+        SELECT * FROM lc_retreat
+        <where>
+            <if test="retreatCode != null and retreatCode != ''">
+                AND retreat_code LIKE CONCAT('%', #{retreatCode}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="idCardNo != null and idCardNo != ''">
+                AND id_card_no LIKE CONCAT('%', #{idCardNo}, '%')
+            </if>
+            <if test="contractNo != null and contractNo != ''">
+                AND contract_no LIKE CONCAT('%', #{contractNo}, '%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="flowStatus != null">
+                AND flow_status = #{flowStatus}
+            </if>
+            <if test="elderId != null">
+                AND elder_id = #{elderId}
+            </if>
+            <if test="applicat != null and applicat != ''">
+                AND applicat LIKE CONCAT('%', #{applicat}, '%')
+            </if>
+            <if test="checkOutTime != null">
+                AND DATE(check_out_time) = DATE(#{checkOutTime})
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="selectRetreatById" resultMap="BaseResultMap">
+        SELECT * FROM lc_retreat WHERE id = #{id}
+    </select>
+
+    <!-- 批量查询（根据ID列表） -->
+    <select id="selectBatchIds" resultMap="BaseResultMap">
+        SELECT * FROM lc_retreat WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 待办列表查询（根据角色） -->
+    <select id="selectTodoList" resultMap="BaseResultMap">
+        SELECT * FROM lc_retreat
+        WHERE status = 0   <!-- STATUS_PENDING -->
+        AND flow_status IN (
+        <choose>
+            <when test="role == 'nurse_leader'">1</when>
+            <when test="role == 'legal_staff'">2</when>
+            <when test="role == 'settleman_staff'">3</when>
+            <when test="role == 'settleman_leader'">4,6</when>
+            <when test="role == 'vice_dean'">5</when>
+            <otherwise>0</otherwise>
+        </choose>
+        )
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectNickNameByusername" resultType="java.lang.String">
+        select nick_name
+        from sys_user
+        where user_name = #{username}
+    </select>
+
+    <select id="selectElderId" resultType="java.lang.Long">
+        select elder_id
+        from lc_retreat
+        where id = #{id}
+    </select>
+
+    <!-- 新增 -->
+    <insert id="insertRetreat" parameterType="Retreat" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO lc_retreat (
+            retreat_code, title, elder_id, name, id_card_no, phone,
+            check_in_start_time, check_in_end_time, nursing_level_name, bed_no,
+            contract_name, contract_url, contract_no, counselor, nursing_name,
+            check_out_time, reason, remark, applicat, applicat_id, dept_no,
+            create_time, flow_status, status, create_by, update_by, update_time,
+            process_instance_id
+        ) VALUES (
+                     #{retreatCode}, #{title}, #{elderId}, #{name}, #{idCardNo}, #{phone},
+                     #{checkInStartTime}, #{checkInEndTime}, #{nursingLevelName}, #{bedNo},
+                     #{contractName}, #{contractUrl}, #{contractNo}, #{counselor}, #{nursingName},
+                     #{checkOutTime}, #{reason}, #{remark}, #{applicat}, #{applicatId}, #{deptNo},
+                     #{createTime}, #{flowStatus}, #{status}, #{createBy}, #{updateBy}, #{updateTime},
+                     #{processInstanceId}
+                 )
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateRetreat" parameterType="Retreat">
+        UPDATE lc_retreat
+        <set>
+            <if test="retreatCode != null">retreat_code = #{retreatCode},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="idCardNo != null">id_card_no = #{idCardNo},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="checkInStartTime != null">check_in_start_time = #{checkInStartTime},</if>
+            <if test="checkInEndTime != null">check_in_end_time = #{checkInEndTime},</if>
+            <if test="nursingLevelName != null">nursing_level_name = #{nursingLevelName},</if>
+            <if test="bedNo != null">bed_no = #{bedNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="contractUrl != null">contract_url = #{contractUrl},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="counselor != null">counselor = #{counselor},</if>
+            <if test="nursingName != null">nursing_name = #{nursingName},</if>
+            <if test="checkOutTime != null">check_out_time = #{checkOutTime},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="applicat != null">applicat = #{applicat},</if>
+            <if test="applicatId != null">applicat_id = #{applicatId},</if>
+            <if test="deptNo != null">dept_no = #{deptNo},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="flowStatus != null">flow_status = #{flowStatus},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = now(),</if>
+            <if test="processInstanceId != null">process_instance_id = #{processInstanceId},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 单个删除 -->
+    <delete id="deleteRetreatById" parameterType="Long">
+        DELETE FROM lc_retreat WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="deleteRetreatByIds" parameterType="String">
+        DELETE FROM lc_retreat WHERE id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectApplicatName" resultType="java.lang.String">
+        select nick_name as nickName
+        from sys_user
+        where user_id = #{applicatId}
+    </select>
+</mapper>

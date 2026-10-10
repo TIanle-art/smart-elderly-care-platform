@@ -1,0 +1,84 @@
+<view class="page">
+  <!-- 自定义导航栏 -->
+  <view class="custom-nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px;">
+      <view class="nav-left" bindtap="goBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">我的合同</view>
+      <view class="nav-right"></view>
+    </view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="content">
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:elif="{{contractList.length === 0}}" class="empty-wrap">
+      <image src="/images/zwnr2x.png" class="empty-img"></image>
+      <text class="empty-text">您暂时没有合同信息哦~</text>
+    </view>
+
+    <!-- 合同列表 -->
+    <view wx:else class="contract-list">
+      <view class="card" wx:for="{{contractList}}" wx:key="id">
+        <!-- 头部：合同编号 + 状态 -->
+        <view class="card-header">
+          <text class="contract-no">{{item.contractNo}}</text>
+          <view class="status-tag {{item.statusClass}}">
+            {{item.statusText}}
+          </view>
+        </view>
+
+        <!-- 主体：封面 + 信息 -->
+        <view class="card-body">
+          <image src="{{item.photo}}" class="cover" mode="aspectFill"></image>
+          <view class="info">
+            <view class="name">{{item.contractName}}</view>
+
+            <view class="row">
+              <text>家人</text>
+              <text style="margin-left:8rpx;">{{item.familyName}}</text>
+            </view>
+
+            <view class="row">
+              <text>签约日期</text>
+              <text>{{item.signDate}}</text>
+            </view>
+            <view class="row">
+              <text>有效期</text>
+              <text>{{item.validPeriod}}</text>
+            </view>
+            <view class="row" wx:if="{{item.cancelTime}}">
+              <text>解除时间</text>
+              <text>{{item.cancelTime}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 底部按钮 -->
+        <view class="card-footer">
+          <view class="btn btn-view" data-item="{{item}}" bindtap="handleView">查看</view>
+          <view class="btn btn-download" data-item="{{item}}" bindtap="handleDownload">下载</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 下载弹窗 -->
+  <view wx:if="{{showDownloadPopup}}" class="mask" bindtap="closePopup" catchtouchmove="preventTouchMove">
+    <view class="popup" catchtap="preventTouchMove">
+      <image src="/images/pdf.png" class="pdf-icon"></image>
+      <view class="title">{{currentContract.contractName}}</view>
+      <view class="tip">请复制链接粘贴到手机默认浏览器下载</view>
+      <view class="copy-btn" bindtap="handleCopyLink">复制链接</view>
+    </view>
+  </view>
+
+  <!-- 复制成功提示 -->
+  <view wx:if="{{showCopiedToast}}" class="toast">已复制</view>
+</view>

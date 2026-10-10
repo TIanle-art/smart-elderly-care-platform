@@ -1,0 +1,196 @@
+/* home/pages/customVisit/customVisit.wxss */
+.contain {
+  background-color: #f2f2f2;
+  padding: 20rpx;
+  min-height: 100vh;
+}
+
+.info {
+  background-color: white;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.label {
+  width: 200rpx;
+  font-size: 32rpx;
+  color: #333;
+}
+
+.input {
+  flex: 1;
+  font-size: 32rpx;
+}
+
+.required {
+  color: #999;
+  font-size: 28rpx;
+  margin-left: 20rpx;
+}
+
+.date-item .picker-text {
+  flex: 1;
+  font-size: 32rpx;
+  color: #666;
+}
+
+.selectTime {
+  background-color: white;
+  margin-top: 40rpx;
+  border-radius: 20rpx;
+  padding: 20rpx 0;
+}
+
+/* 时间选项卡样式 */
+.time-tabs {
+  display: flex;
+  margin: 20rpx 20rpx 30rpx;
+  border-bottom: 2rpx solid #eee;
+  justify-content: center;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 40rpx;
+  font-size: 32rpx;
+  color: #999;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  color: #007aff;
+  font-weight: 500;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2rpx;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background-color: #007aff;
+}
+
+/* 时间列表 - 每行显示三个 */
+.time-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 20rpx;
+  gap: 20rpx;
+}
+
+.time-item {
+  width: calc((100% - 40rpx) / 3);
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  color: #333;
+  cursor: pointer;
+}
+
+/* 可用时间点击效果 */
+.time-item:active {
+  transform: scale(0.96);
+  opacity: 0.8;
+}
+
+/* ========== 禁用时间样式（默认灰色）========== */
+.time-item.disabled ,
+.time-item.disabled text{
+  background-color: #f5f5f5 !important;
+  border-color: #e0e0e0 !important;
+  color: #cccccc !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+}
+
+/* 选中时间样式 */
+.time-item.active {
+  background-color: #007aff !important;
+  color: #fff !important;
+  border-color: #007aff !important;
+  box-shadow: 0 4rpx 12rpx rgba(0, 122, 255, 0.3);
+  transform: scale(1.02);
+}
+
+/* 未选日期时，整个时间区域置灰不可点 */
+.disabled-tabs {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.disabled-list {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.disabled-list .time-item {
+  pointer-events: none !important;
+}
+
+/* 提交按钮样式 */
+.submit-btn {
+  margin: 60rpx 20rpx 40rpx;
+  background: linear-gradient(135deg, #007aff 0%, #0051d5 100%);
+  color: #fff;
+  border-radius: 50rpx;
+  font-size: 34rpx;
+  font-weight: 500;
+  height: 90rpx;
+  line-height: 90rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0, 122, 255, 0.3);
+  transition: all 0.3s ease;
+  border: none;
+  /* 新增：水平垂直居中 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 40rpx); /* 确保按钮占满容器宽度 */
+}
+
+
+.submit-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(0, 122, 255, 0.3);
+}
+
+/* 响应式适配 - 小屏幕设备 */
+@media (max-width: 375px) {
+  .time-item {
+    font-size: 26rpx;
+    height: 70rpx;
+    line-height: 70rpx;
+  }
+  
+  .tab {
+    font-size: 28rpx;
+    padding: 16rpx 20rpx;
+  }
+  
+  .label {
+    width: 180rpx;
+    font-size: 28rpx;
+  }
+  
+  .input {
+    font-size: 28rpx;
+  }
+}

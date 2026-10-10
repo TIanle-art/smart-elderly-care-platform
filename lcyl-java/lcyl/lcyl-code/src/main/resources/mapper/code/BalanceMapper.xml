@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.BalanceMapper">
+    
+    <resultMap type="Balance" id="BalanceResult">
+        <result property="id"    column="id"    />
+        <result property="prepaidBalance"    column="prepaid_balance"    />
+        <result property="depositAmount"    column="deposit_amount"    />
+        <result property="arrearsAmount"    column="arrears_amount"    />
+        <result property="paymentDeadline"    column="payment_deadline"    />
+        <result property="status"    column="status"    />
+        <result property="elderId"    column="elder_id"    />
+        <result property="elderName"    column="elder_name"    />
+        <result property="bedNo"    column="bed_no"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectBalanceVo">
+        select id, prepaid_balance, deposit_amount, arrears_amount, payment_deadline, status, elder_id, elder_name, bed_no, create_time, update_time, create_by, update_by, remark, del_flag from balance
+    </sql>
+
+    <select id="selectBalanceList" parameterType="Balance" resultMap="BalanceResult">
+        <include refid="selectBalanceVo"/>
+        <where>  
+            <if test="arrearsOnly != null and arrearsOnly != ''">
+                and ifnull(arrears_amount, 0) > 0
+                and payment_deadline is not null
+                and payment_deadline <![CDATA[<]]> now()
+            </if>
+            <if test="arrearsAmount != null "> and arrears_amount = #{arrearsAmount}</if>
+            <if test="elderId != null "> and elder_id = #{elderId}</if>
+            <if test="elderName != null  and elderName != ''"> and elder_name like concat('%', #{elderName}, '%')</if>
+            <if test="bedNo != null  and bedNo != ''"> and bed_no = #{bedNo}</if>
+        </where>
+    </select>
+
+    <select id="selectBalanceByElderId" parameterType="Long" resultMap="BalanceResult">
+        <include refid="selectBalanceVo"/>
+        where elder_id = #{elderId}
+        limit 1
+    </select>
+    
+    <select id="selectBalanceById" parameterType="Long" resultMap="BalanceResult">
+        <include refid="selectBalanceVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectByElderId" resultType="com.lcyl.code.domain.Balance">
+        select * from balance
+        where elder_id = #{elderId}
+          and del_flag = 0
+    </select>
+
+    <insert id="insertBalance" parameterType="Balance" useGeneratedKeys="true" keyProperty="id">
+        insert into balance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prepaidBalance != null">prepaid_balance,</if>
+            <if test="depositAmount != null">deposit_amount,</if>
+            <if test="arrearsAmount != null">arrears_amount,</if>
+            <if test="paymentDeadline != null">payment_deadline,</if>
+            <if test="status != null">status,</if>
+            <if test="elderId != null">elder_id,</if>
+            <if test="elderName != null">elder_name,</if>
+            <if test="bedNo != null">bed_no,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="prepaidBalance != null">#{prepaidBalance},</if>
+            <if test="depositAmount != null">#{depositAmount},</if>
+            <if test="arrearsAmount != null">#{arrearsAmount},</if>
+            <if test="paymentDeadline != null">#{paymentDeadline},</if>
+            <if test="status != null">#{status},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="elderName != null">#{elderName},</if>
+            <if test="bedNo != null">#{bedNo},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBalance" parameterType="Balance">
+        update balance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="prepaidBalance != null">prepaid_balance = #{prepaidBalance},</if>
+            <if test="depositAmount != null">deposit_amount = #{depositAmount},</if>
+            <if test="arrearsAmount != null">arrears_amount = #{arrearsAmount},</if>
+            <if test="paymentDeadline != null">payment_deadline = #{paymentDeadline},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="elderName != null">elder_name = #{elderName},</if>
+            <if test="bedNo != null">bed_no = #{bedNo},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="increaseArrearsAmount">
+        update balance
+        set arrears_amount = ifnull(arrears_amount, 0) + #{arrearsAmount},
+            elder_name = #{elderName},
+            bed_no = #{bedNo},
+            payment_deadline = #{paymentDeadline},
+            update_by = #{updateBy},
+            update_time = now()
+        where elder_id = #{elderId}
+    </update>
+
+    <update id="decreaseArrearsAmount">
+        update balance
+        set arrears_amount = case
+                                 when ifnull(arrears_amount, 0) - #{arrearsAmount} <![CDATA[<]]> 0 then 0
+                                 else ifnull(arrears_amount, 0) - #{arrearsAmount}
+                             end,
+            payment_deadline = case
+                                   when ifnull(arrears_amount, 0) - #{arrearsAmount} <![CDATA[<=]]> 0 then null
+                                   else payment_deadline
+                               end,
+            update_by = #{updateBy},
+            update_time = now()
+        where elder_id = #{elderId}
+    </update>
+    
+    <update id="updateElderBalance">
+        update balance
+        set status = #{status},
+            update_time = now()
+        where id = #{id}
+    </update>
+
+    <insert id="insertBalanceForBill" parameterType="Balance" useGeneratedKeys="true" keyProperty="id">
+        insert into balance
+        (
+            prepaid_balance,
+            deposit_amount,
+            arrears_amount,
+            payment_deadline,
+            status,
+            elder_id,
+            elder_name,
+            bed_no,
+            create_time,
+            update_time,
+            create_by,
+            update_by,
+            remark,
+            del_flag
+        )
+        values
+        (
+            #{prepaidBalance},
+            #{depositAmount},
+            #{arrearsAmount},
+            #{paymentDeadline},
+            #{status},
+            #{elderId},
+            #{elderName},
+            #{bedNo},
+            #{createTime},
+            #{updateTime},
+            #{createBy},
+            #{updateBy},
+            #{remark},
+            #{delFlag}
+        )
+    </insert>
+
+    <delete id="deleteBalanceById" parameterType="Long">
+        delete from balance where id = #{id}
+    </delete>
+
+    <delete id="deleteBalanceByIds" parameterType="String">
+        delete from balance where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

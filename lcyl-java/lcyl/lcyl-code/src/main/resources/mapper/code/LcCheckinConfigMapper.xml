@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcCheckinConfigMapper">
+    
+    <resultMap type="LcCheckinConfig" id="LcCheckinConfigResult">
+        <result property="id"    column="id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="bedNo"    column="bed_no"    />
+        <result property="nurseId"    column="nurse_id"    />
+        <result property="nurseName"    column="nurse_name"    />
+        <result property="careFee"    column="care_fee"    />
+        <result property="roomFee"    column="room_fee"    />
+        <result property="totalFee"    column="total_fee"    />
+        <result property="configTime"    column="config_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectLcCheckinConfigVo">
+        select id, apply_id, bed_no, nurse_id, nurse_name, care_fee, room_fee, total_fee, config_time, del_flag, create_by, create_time from lc_checkin_config
+    </sql>
+
+    <select id="selectLcCheckinConfigList" parameterType="LcCheckinConfig" resultMap="LcCheckinConfigResult">
+        <include refid="selectLcCheckinConfigVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="bedNo != null  and bedNo != ''"> and bed_no = #{bedNo}</if>
+            <if test="nurseId != null "> and nurse_id = #{nurseId}</if>
+            <if test="nurseName != null  and nurseName != ''"> and nurse_name like concat('%', #{nurseName}, '%')</if>
+            <if test="careFee != null "> and care_fee = #{careFee}</if>
+            <if test="roomFee != null "> and room_fee = #{roomFee}</if>
+            <if test="totalFee != null "> and total_fee = #{totalFee}</if>
+            <if test="configTime != null "> and config_time = #{configTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLcCheckinConfigById" parameterType="Long" resultMap="LcCheckinConfigResult">
+        <include refid="selectLcCheckinConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcCheckinConfig" parameterType="LcCheckinConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_checkin_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">apply_id,</if>
+            <if test="bedNo != null">bed_no,</if>
+            <if test="nurseId != null">nurse_id,</if>
+            <if test="nurseName != null">nurse_name,</if>
+            <if test="careFee != null">care_fee,</if>
+            <if test="roomFee != null">room_fee,</if>
+            <if test="totalFee != null">total_fee,</if>
+            <if test="configTime != null">config_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">#{applyId},</if>
+            <if test="bedNo != null">#{bedNo},</if>
+            <if test="nurseId != null">#{nurseId},</if>
+            <if test="nurseName != null">#{nurseName},</if>
+            <if test="careFee != null">#{careFee},</if>
+            <if test="roomFee != null">#{roomFee},</if>
+            <if test="totalFee != null">#{totalFee},</if>
+            <if test="configTime != null">#{configTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcCheckinConfig" parameterType="LcCheckinConfig">
+        update lc_checkin_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null">apply_id = #{applyId},</if>
+            <if test="bedNo != null">bed_no = #{bedNo},</if>
+            <if test="nurseId != null">nurse_id = #{nurseId},</if>
+            <if test="nurseName != null">nurse_name = #{nurseName},</if>
+            <if test="careFee != null">care_fee = #{careFee},</if>
+            <if test="roomFee != null">room_fee = #{roomFee},</if>
+            <if test="totalFee != null">total_fee = #{totalFee},</if>
+            <if test="configTime != null">config_time = #{configTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcCheckinConfigById" parameterType="Long">
+        delete from lc_checkin_config where id = #{id}
+    </delete>
+
+    <delete id="deleteLcCheckinConfigByIds" parameterType="String">
+        delete from lc_checkin_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

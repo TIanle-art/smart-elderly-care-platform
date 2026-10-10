@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.NursingTaskMapper">
+
+    <select id="selectTaskList" resultType="com.lcyl.code.domain.vo.NursingTaskVO">
+        SELECT
+        o.id,
+        IFNULL(e.name, '--') AS elderName,
+        IFNULL(e.bed_number, '--') AS bedNumber,
+        o.project_name AS projectName,
+        o.item_type AS itemType,
+        GROUP_CONCAT(DISTINCT n.name SEPARATOR ', ') AS nurseName,
+        o.applicant_name AS applicantName,
+        o.expected_service_time AS expectedServiceTime,
+        o.create_time AS createTime,
+        o.order_no AS orderNo,
+        MAX(oe.execute_status) AS executeStatus
+        FROM lc_service_order o
+        LEFT JOIN elder e ON o.elder_id = e.id
+        LEFT JOIN lc_elder_nurse_assign en ON e.id = en.elder_id
+        LEFT JOIN lc_nurse n ON en.nurse_id = n.id
+        LEFT JOIN lc_nursing_task_execution oe ON o.id = oe.order_id
+
+        WHERE 1=1
+        <if test="query.elderName != null and query.elderName != ''">
+            AND e.name LIKE CONCAT('%', #{query.elderName}, '%')
+        </if>
+        <if test="query.nurseName != null and query.nurseName != ''">
+            AND n.name = #{query.nurseName}
+        </if>
+        <if test="query.itemType != null and query.itemType != ''">
+            AND o.item_type = #{query.itemType}
+        </if>
+        <if test="query.executeStatus != null and query.executeStatus != ''">
+            AND oe.execute_status = #{query.executeStatus}
+        </if>
+        <if test="query.beginTime != null and query.beginTime != ''">
+            AND o.expected_service_time &gt;= #{query.beginTime}
+        </if>
+        <if test="query.endTime != null and query.endTime != ''">
+            AND o.expected_service_time &lt;= #{query.endTime}
+        </if>
+
+        GROUP BY o.id
+        ORDER BY o.create_time DESC
+    </select>
+
+    <select id="selectTaskDetail" resultType="com.lcyl.code.domain.vo.NursingTaskDetailVO">
+        SELECT
+            o.id,
+            IFNULL(e.name, '--') AS elderName,
+            IFNULL(e.bed_number, '--') AS bedNumber,
+            o.project_name AS projectName,
+            o.item_type AS itemType,
+            GROUP_CONCAT(DISTINCT n.name SEPARATOR ', ') AS nurseName,
+            o.applicant_name AS applicantName,
+            o.expected_service_time AS expectedServiceTime,
+            o.create_time AS createTime,
+            o.order_no AS orderNo,
+            MAX(oe.execute_status) AS executeStatus,
+            IFNULL(MAX(oe.executor_name), '--') AS executorName,
+            IFNULL(MAX(DATE_FORMAT(oe.execute_time, '%Y-%m-%d %H:%i:%s')), '--') AS executeTime,
+            IFNULL(MAX(oe.execute_image), '') AS executeImage,
+            IFNULL(MAX(oe.execute_record), '--') AS executeRecord,
+            IFNULL(MAX(DATE_FORMAT(oe.cancel_time, '%Y-%m-%d %H:%i:%s')), '--') AS cancelTime,
+            IFNULL(MAX(oe.cancel_reason), '--') AS cancelReason
+        FROM lc_service_order o
+                 LEFT JOIN elder e ON o.elder_id = e.id
+                 LEFT JOIN lc_elder_nurse_assign en ON e.id = en.elder_id
+                 LEFT JOIN lc_nurse n ON en.nurse_id = n.id
+                 LEFT JOIN lc_nursing_task_execution oe ON o.id = oe.order_id
+        WHERE o.id = #{id}
+        GROUP BY o.id
+    </select>
+
+    <!-- 取消任务 -->
+    <update id="updateCancelStatus">
+        UPDATE lc_nursing_task_execution
+        SET execute_status = '2',
+            cancel_reason = #{cancelReason},
+            cancel_time = #{cancelTime},
+            executor_name  = #{executorName},
+            executor_id  = #{executorId},
+            update_time = NOW()
+        WHERE order_id = #{id}
+    </update>
+
+    <!-- 执行任务 -->
+    <update id="updateExecuteStatus">
+        UPDATE lc_nursing_task_execution
+        SET execute_status = '1',
+            execute_time = #{executeTime},
+            execute_image = #{vo.executeImage},
+            execute_record = #{vo.executeRecord},
+            executor_name  = #{executorName},
+            executor_id  = #{executorId},
+            update_time = NOW()
+        WHERE order_id = #{id}
+
+    </update>
+
+    <!--完成任务-->
+    <update id="updateCompletedStatus">
+        UPDATE lc_nursing_task_execution
+        SET execute_status = '3',
+            execute_time = #{executeTime},
+            executor_name  = #{executorName},
+            executor_id  = #{executorId},
+            update_time = NOW()
+        WHERE order_id = #{id}
+    </update>
+
+    <!-- 改期任务 -->
+    <update id="updateExpectedServiceTime">
+        UPDATE lc_service_order
+        SET expected_service_time = #{expectedServiceTime}
+        WHERE id = (SELECT order_id FROM lc_nursing_task_execution WHERE order_id = #{id})
+    </update>
+
+    <select id="countTaskExecutionByOrderId" resultType="int">
+        SELECT COUNT(1)
+        FROM lc_nursing_task_execution
+        WHERE order_id = #{orderId}
+    </select>
+
+    <insert id="insertTaskExecutionInit">
+        INSERT INTO lc_nursing_task_execution
+        (
+            order_id,
+            execute_status,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        )
+        VALUES
+        (
+            #{orderId},
+            '0',
+            #{createBy},
+            #{createTime},
+            #{createBy},
+            #{createTime}
+        )
+    </insert>
+
+</mapper>

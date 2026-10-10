@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcRetreatContractMapper">
+
+    <resultMap id="BaseResultMap" type="com.lcyl.code.domain.LcRetreatContract">
+        <id column="id" property="id"/>
+        <result column="retreat_id" property="retreatId"/>
+        <result column="contract_url" property="contractUrl"/>
+        <result column="contract_name" property="contractName"/>
+        <result column="terminate_date" property="terminateDate"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_name" property="createName"/>
+        <result column="contract_no" property="contractNo"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO lc_retreat_contract (retreat_id, contract_url, contract_name, terminate_date,create_by, create_time, update_by, update_time,contract_no
+        ) VALUES (
+                     #{retreatId}, #{contractUrl}, #{contractName}, #{terminateDate},
+                     #{createBy}, #{createTime}, #{updateBy}, #{updateTime},#{contractNo}
+                 )
+    </insert>
+
+    <select id="selectByRetreatId" resultMap="BaseResultMap">
+        SELECT
+        c.id,
+        c.retreat_id,
+        c.contract_url,
+        c.contract_name,
+        c.terminate_date,
+        c.create_by,
+        c.create_time,
+        c.update_by,
+        c.update_time,
+        u.user_name AS create_name
+        FROM lc_retreat_contract c
+        LEFT JOIN sys_user u ON c.create_by = u.user_id   <!-- 修正为 create_by -->
+        WHERE c.retreat_id = #{retreatId}
+        ORDER BY c.create_time DESC
+    </select>
+
+<!--    <select id="selectContractByRetreatId" resultMap="BaseResultMap">-->
+<!--        SELECT-->
+<!--        c.id,-->
+<!--        c.retreat_id,-->
+<!--        c.contract_url,-->
+<!--        c.contract_name,-->
+<!--        c.terminate_date as terminateDate,-->
+<!--        c.create_by,-->
+<!--        c.create_time,-->
+<!--        c.update_by,-->
+<!--        c.update_time,-->
+<!--        c.contract_no as contractNo-->
+<!--        FROM lc_retreat_contract c-->
+<!--        LEFT JOIN sys_user u ON c.create_by = u.user_id   &lt;!&ndash; 修正为 create_by &ndash;&gt;-->
+<!--        WHERE c.retreat_id = #{retreatId}-->
+<!--        ORDER BY c.create_time DESC-->
+    <!-- 根据退住ID查询合同信息（单条） -->
+    <select id="selectContractByRetreatId" resultMap="BaseResultMap">
+        SELECT
+            c.id,
+            c.retreat_id,
+            c.contract_no,
+            c.contract_url,
+            c.contract_name,
+            c.terminate_date,
+            c.create_by,
+            c.create_time,
+            c.update_by,
+            c.update_time,
+            u.user_name AS create_name
+        FROM lc_retreat_contract c
+                 LEFT JOIN sys_user u ON c.create_by = u.user_id
+        WHERE c.retreat_id = #{retreatId}
+        ORDER BY c.create_time DESC
+            LIMIT 1
+    </select>
+</mapper>

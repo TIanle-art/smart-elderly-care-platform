@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.ServiceOrderMapper">
+
+    <resultMap type="ServiceOrder" id="ServiceOrderResult">
+        <result property="id" column="id" />
+        <result property="orderNo" column="order_no" />
+        <result property="elderId" column="elder_id" />
+        <result property="elderName" column="elder_name" />
+        <result property="bedId" column="bed_id" />
+        <result property="bedNo" column="bed_no" />
+        <result property="projectId" column="project_id" />
+        <result property="projectName" column="project_name" />
+        <result property="orderAmount" column="order_amount" />
+        <result property="expectedServiceTime" column="expected_service_time" />
+        <result property="orderSource" column="order_source" />
+        <result property="applicantId" column="applicant_id" />
+        <result property="applicantName" column="applicant_name" />
+        <result property="applicantPhone" column="applicant_phone" />
+        <result property="remark" column="remark" />
+        <result property="orderStatus" column="order_status" />
+        <result property="tradeStatus" column="trade_status" />
+        <result property="payTime" column="pay_time" />
+        <result property="executeTime" column="execute_time" />
+        <result property="finishTime" column="finish_time" />
+        <result property="cancelTime" column="cancel_time" />
+        <result property="cancelReason" column="cancel_reason" />
+        <result property="delFlag" column="del_flag" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <resultMap type="com.lcyl.code.domain.vo.ServiceOrderExecutionVO" id="ServiceOrderExecutionResult">
+        <result property="id" column="id" />
+        <result property="orderId" column="order_id" />
+        <result property="executeStatus" column="execute_status" />
+        <result property="cancelReason" column="cancel_reason" />
+        <result property="cancelTime" column="cancel_time" />
+        <result property="executeTime" column="execute_time" />
+        <result property="executeImage" column="execute_image" />
+        <result property="executeRecord" column="execute_record" />
+        <result property="executorId" column="executor_id" />
+        <result property="executorName" column="executor_name" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <resultMap type="com.lcyl.code.domain.vo.WxMyOrderVO" id="WxMyOrderResult">
+        <result property="id" column="id" />
+        <result property="orderNo" column="order_no" />
+        <result property="elderId" column="elder_id" />
+        <result property="elderName" column="elder_name" />
+        <result property="bedNo" column="bed_no" />
+        <result property="projectName" column="project_name" />
+        <result property="projectImage" column="project_image" />
+        <result property="orderAmount" column="order_amount" />
+        <result property="expectedServiceTime" column="expected_service_time" />
+        <result property="orderStatus" column="order_status" />
+        <result property="tradeStatus" column="trade_status" />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <sql id="selectServiceOrderVo">
+        select
+            id,
+            order_no,
+            elder_id,
+            elder_name,
+            bed_id,
+            bed_no,
+            project_id,
+            project_name,
+            order_amount,
+            expected_service_time,
+            order_source,
+            applicant_id,
+            applicant_name,
+            applicant_phone,
+            remark,
+            order_status,
+            trade_status,
+            pay_time,
+            execute_time,
+            finish_time,
+            cancel_time,
+            cancel_reason,
+            del_flag,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        from lc_service_order
+    </sql>
+
+    <select id="selectServiceOrderList" parameterType="ServiceOrder" resultMap="ServiceOrderResult">
+        <include refid="selectServiceOrderVo"/>
+        <where>
+            <if test="orderNo != null and orderNo != ''">
+                and order_no like concat('%', #{orderNo}, '%')
+            </if>
+            <if test="elderName != null and elderName != ''">
+                and elder_name like concat('%', #{elderName}, '%')
+            </if>
+            <if test="projectName != null and projectName != ''">
+                and project_name like concat('%', #{projectName}, '%')
+            </if>
+            <if test="applicantName != null and applicantName != ''">
+                and applicant_name like concat('%', #{applicantName}, '%')
+            </if>
+            <if test="orderStatus != null and orderStatus != ''">
+                and order_status = #{orderStatus}
+            </if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectServiceOrderById" parameterType="Long" resultMap="ServiceOrderResult">
+        <include refid="selectServiceOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectExecutionByOrderId" parameterType="Long" resultMap="ServiceOrderExecutionResult">
+        select
+            id,
+            order_id,
+            execute_status,
+            cancel_reason,
+            cancel_time,
+            execute_time,
+            execute_image,
+            execute_record,
+            executor_id,
+            executor_name,
+            create_time,
+            update_time
+        from lc_nursing_task_execution
+        where order_id = #{orderId}
+        order by update_time desc, id desc
+        limit 1
+    </select>
+
+    <select id="selectWxMyOrderList" resultMap="WxMyOrderResult">
+        select
+            so.id,
+            so.order_no,
+            so.elder_id,
+            so.elder_name,
+            so.bed_no,
+            so.project_name,
+            ni.image_url as project_image,
+            so.order_amount,
+            so.expected_service_time,
+            so.order_status,
+            so.trade_status,
+            so.create_time
+        from lc_service_order so
+        left join lc_nursing_item ni on so.project_id = ni.id
+        where so.del_flag = '0'
+          and (
+            so.applicant_id = #{memberId}
+            or exists (
+                select 1
+                from lc_elder_member em
+                where em.elder_id = so.elder_id
+                  and em.member_id = #{memberId}
+            )
+          )
+        order by so.create_time desc
+    </select>
+
+    <select id="selectWxMyOrderDetail" resultMap="ServiceOrderResult">
+        select
+            so.id,
+            so.order_no,
+            so.elder_id,
+            so.elder_name,
+            so.bed_id,
+            so.bed_no,
+            so.project_id,
+            so.project_name,
+            so.order_amount,
+            so.expected_service_time,
+            so.order_source,
+            so.applicant_id,
+            so.applicant_name,
+            so.applicant_phone,
+            so.remark,
+            so.order_status,
+            so.trade_status,
+            so.pay_time,
+            so.execute_time,
+            so.finish_time,
+            so.cancel_time,
+            so.cancel_reason,
+            so.del_flag,
+            so.create_by,
+            so.create_time,
+            so.update_by,
+            so.update_time
+        from lc_service_order so
+        where so.id = #{id}
+          and so.del_flag = '0'
+          and (
+            so.applicant_id = #{memberId}
+            or exists (
+                select 1
+                from lc_elder_member em
+                where em.elder_id = so.elder_id
+                  and em.member_id = #{memberId}
+            )
+          )
+        limit 1
+    </select>
+
+    <select id="selectWxOrderProjectImage" resultType="string">
+        select ni.image_url
+        from lc_service_order so
+        left join lc_nursing_item ni on so.project_id = ni.id
+        where so.id = #{id}
+          and so.del_flag = '0'
+          and (
+            so.applicant_id = #{memberId}
+            or exists (
+                select 1
+                from lc_elder_member em
+                where em.elder_id = so.elder_id
+                  and em.member_id = #{memberId}
+            )
+          )
+        limit 1
+    </select>
+
+    <!-- ===================== 退住应退专用查询 ===================== -->
+    <select id="selectRefundServiceOrderList" parameterType="java.lang.Long" resultMap="ServiceOrderResult">
+        <include refid="selectServiceOrderVo"/>
+        WHERE elder_id = #{elderId}
+        AND order_status = '1'
+        AND trade_status = '1'
+        AND del_flag = '0'
+    </select>
+    <select id="selectUnfinishedByElderId" resultType="com.lcyl.code.domain.ServiceOrder">
+        select * from lc_service_order
+        where elder_id = #{elderId}
+          and order_status in ('0','1','2')
+          and del_flag = 0
+    </select>
+
+    <insert id="insertServiceOrder" parameterType="ServiceOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_service_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">order_no,</if>
+            <if test="elderId != null">elder_id,</if>
+            <if test="elderName != null and elderName != ''">elder_name,</if>
+            <if test="bedId != null">bed_id,</if>
+            <if test="bedNo != null and bedNo != ''">bed_no,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="projectName != null and projectName != ''">project_name,</if>
+            <if test="orderAmount != null">order_amount,</if>
+            <if test="expectedServiceTime != null">expected_service_time,</if>
+            <if test="orderSource != null and orderSource != ''">order_source,</if>
+            <if test="applicantId != null">applicant_id,</if>
+            <if test="applicantName != null and applicantName != ''">applicant_name,</if>
+            <if test="applicantPhone != null and applicantPhone != ''">applicant_phone,</if>
+            <if test="remark != null">remark,</if>
+            <if test="orderStatus != null and orderStatus != ''">order_status,</if>
+            <if test="tradeStatus != null and tradeStatus != ''">trade_status,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="executeTime != null">execute_time,</if>
+            <if test="finishTime != null">finish_time,</if>
+            <if test="cancelTime != null">cancel_time,</if>
+            <if test="cancelReason != null">cancel_reason,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="elderName != null and elderName != ''">#{elderName},</if>
+            <if test="bedId != null">#{bedId},</if>
+            <if test="bedNo != null and bedNo != ''">#{bedNo},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="projectName != null and projectName != ''">#{projectName},</if>
+            <if test="orderAmount != null">#{orderAmount},</if>
+            <if test="expectedServiceTime != null">#{expectedServiceTime},</if>
+            <if test="orderSource != null and orderSource != ''">#{orderSource},</if>
+            <if test="applicantId != null">#{applicantId},</if>
+            <if test="applicantName != null and applicantName != ''">#{applicantName},</if>
+            <if test="applicantPhone != null and applicantPhone != ''">#{applicantPhone},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="orderStatus != null and orderStatus != ''">#{orderStatus},</if>
+            <if test="tradeStatus != null and tradeStatus != ''">#{tradeStatus},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="executeTime != null">#{executeTime},</if>
+            <if test="finishTime != null">#{finishTime},</if>
+            <if test="cancelTime != null">#{cancelTime},</if>
+            <if test="cancelReason != null">#{cancelReason},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateServiceOrder" parameterType="ServiceOrder">
+        update lc_service_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="elderName != null and elderName != ''">elder_name = #{elderName},</if>
+            <if test="bedId != null">bed_id = #{bedId},</if>
+            <if test="bedNo != null and bedNo != ''">bed_no = #{bedNo},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
+            <if test="orderAmount != null">order_amount = #{orderAmount},</if>
+            <if test="expectedServiceTime != null">expected_service_time = #{expectedServiceTime},</if>
+            <if test="orderSource != null and orderSource != ''">order_source = #{orderSource},</if>
+            <if test="applicantId != null">applicant_id = #{applicantId},</if>
+            <if test="applicantName != null and applicantName != ''">applicant_name = #{applicantName},</if>
+            <if test="applicantPhone != null and applicantPhone != ''">applicant_phone = #{applicantPhone},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="orderStatus != null and orderStatus != ''">order_status = #{orderStatus},</if>
+            <if test="tradeStatus != null and tradeStatus != ''">trade_status = #{tradeStatus},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="executeTime != null">execute_time = #{executeTime},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+            <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
+            <if test="cancelReason != null">cancel_reason = #{cancelReason},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="autoCancelTimeoutOrders">
+        update lc_service_order
+        set order_status = '5',
+            trade_status = '5',
+            cancel_time = now(),
+            cancel_reason = '超过15分钟未支付自动取消',
+            update_time = now()
+        where del_flag = '0'
+          and order_status = '0'
+          and trade_status = '0'
+          and create_time <![CDATA[<=]]> date_sub(now(), interval 15 minute)
+    </update>
+
+    <delete id="deleteServiceOrderById" parameterType="Long">
+        delete from lc_service_order where id = #{id}
+    </delete>
+
+    <delete id="deleteServiceOrderByIds" parameterType="String">
+        delete from lc_service_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,58 @@
+<view class="page">
+  <!-- 自定义导航栏 -->
+  <view class="custom-nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px;">
+      <view class="nav-left" bindtap="goBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">编辑资料</view>
+      <view class="nav-right-placeholder"></view>
+    </view>
+  </view>
+
+  <view class="page-body">
+    <!-- 头像 -->
+    <view class="card">
+      <view class="form-item avatar-item" bindtap="chooseAvatar">
+        <text class="label">头像</text>
+        <view class="avatar-right">
+          <image class="avatar" src="{{form.avatar || defaultAvatar}}" mode="aspectFill"></image>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 昵称 -->
+    <view class="card">
+      <view class="form-item">
+        <text class="label">昵称</text>
+        <input
+          class="input"
+          type="nickname"
+          placeholder="请输入昵称"
+          value="{{form.name}}"
+          bindinput="onNameInput"
+          maxlength="20"
+        />
+      </view>
+    </view>
+
+    <!-- 性别 -->
+    <view class="card">
+      <view class="form-item picker-item" bindtap="showGenderOptions">
+        <text class="label">性别</text>
+        <view class="picker-right">
+          <text class="picker-text {{form.gender ? 'active' : ''}}">
+            {{form.gender || '请选择性别'}}
+          </text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 保存按钮 -->
+    <view class="btn-wrapper">
+      <button class="save-btn" bindtap="handleSave">保存</button>
+    </view>
+  </view>
+</view>

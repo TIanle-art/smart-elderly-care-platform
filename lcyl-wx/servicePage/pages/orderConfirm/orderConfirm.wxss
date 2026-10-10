@@ -1,0 +1,125 @@
+/* 全局容器 */
+.container {
+    background: #F7F6FB;
+    min-height: 100vh;
+    padding-top: 7rpx;
+  }
+  
+  /* 卡片样式 */
+  .card {
+    background: #FFFFFF;
+    margin: 20rpx;
+    border-radius: 16rpx;
+    padding: 30rpx 24rpx;
+  }
+  
+  /* 服务行 */
+  .service-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30rpx;
+    padding-bottom: 30rpx;
+    border-bottom: 1rpx solid #F4F4F4;
+  }
+  .service-img {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 8rpx;
+    margin-right: 20rpx;
+  }
+  .service-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #151515;
+    display: block;
+  }
+  .service-price {
+    font-size: 16px;
+    color: #FE6A3D;
+    margin-top: 8rpx;
+    display: block;
+  }
+  
+  /* 信息行（服务家人、时间）—— ✅ 关键：添加背景色 */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 24rpx 20rpx;
+    margin: 20rpx 20rpx;
+    background: #F7F7F7; /* ✅ 和截图一样的浅灰色背景 */
+    border-radius: 10rpx; /* ✅ 圆角 */
+  }
+  .info-row:last-child {
+    border-bottom: none;
+  }
+  .label {
+    font-size: 16px;
+    color: #151515;
+  }
+  .value {
+    font-size: 16px;
+    color: #666666;
+  }
+  
+  /* 小计行 */
+  .total-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 30rpx;
+  }
+  .total-row .label {
+    font-size: 16px;
+    color: #151515;
+    margin-right: 10rpx;
+  }
+  .total-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FE6A3D;
+  }
+  
+  /* 备注卡片 */
+  .remark-card {
+    background: #FFFFFF;
+    margin: 20rpx;
+    border-radius: 16rpx;
+    padding: 30rpx 24rpx;
+  }
+  .remark-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #151515;
+    display: block;
+    margin-bottom: 20rpx;
+  }
+  .remark-input {
+    width: 100%;
+    min-height: 200rpx;
+    background: #F7F7F7;
+    border-radius: 8rpx;
+    padding: 20rpx;
+    font-size: 14px;
+    color: #151515;
+    border: none;
+  }
+  .word-count {
+    text-align: right;
+    font-size: 12px;
+    color: #878787;
+    margin-top: 10rpx;
+    display: block;
+  }
+  
+  /* 提交按钮 */
+  .submit-btn {
+    background: #FE6A3D;
+    color: #FFFFFF;
+    border-radius: 50rpx;
+    padding: 28rpx;
+    margin: 60rpx 20rpx;
+    width: calc(100% - 40rpx);
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+  }

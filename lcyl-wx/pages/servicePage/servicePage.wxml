@@ -1,0 +1,107 @@
+<view class="service-page">
+  <!-- 搜索框 -->
+  <view class="search-bar">
+    <icon class="search-icon" type="search" size="18" color="#999"></icon>
+    <input 
+      class="search-input" 
+      placeholder="搜索" 
+      value="{{searchKey}}"
+      bindinput="onSearchInput"
+    />
+  </view>
+
+  <!-- 服务列表 -->
+  <view class="service-list">
+    <view 
+      wx:for="{{serviceList}}" 
+      wx:key="id" 
+      class="service-item"
+      bindtap="goServiceDetail"
+      data-id="{{item.id}}"
+    >
+      <image class="service-img" src="{{item.imageUrl}}" mode="widthFix"></image>
+      <view class="service-info">
+        <text class="service-name">{{item.itemName}}</text>
+        <text class="service-desc">{{item.itemDesc}}</text>
+        <view class="service-row">
+          <view class="service-price">
+            <text class="price">¥{{item.price}}</text>
+            <text class="unit">/{{item.unit}}</text>
+          </view>
+          <button class="buy-btn" catchtap="showOrderPopup" data-id="{{item.id}}">购买</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务下单弹窗 -->
+  <view class="order-popup" wx:if="{{showOrderPopup}}">
+    <view class="popup-content">
+      <view class="popup-header">
+        <text class="popup-close" bindtap="hideOrderPopup">×</text>
+        <text class="popup-title">{{selectedService ? selectedService.itemName : ''}}</text>
+      </view>
+
+      <view class="form-item" bindtap="checkFamilyAndShowPicker" hover-class="item-hover">
+        <text class="label">选择家人 <text class="required">*</text></text>
+        <view class="right-box">
+          <text class="value">{{familyName || '请选择'}}</text>
+        </view>
+      </view>
+
+      <view class="form-item" hover-class="item-hover">
+        <text class="label">期望服务日期 <text class="required">*</text></text>
+        <picker mode="date" value="{{serviceDate}}" start="{{nowDate}}" end="{{endDate}}" bindchange="onDateChange">
+          <view class="right-box">
+            <text class="value">{{serviceDate || '请选择日期'}}</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item" hover-class="item-hover">
+        <text class="label">期望服务时间 <text class="required">*</text></text>
+        <picker mode="time" value="{{serviceTime}}" start="00:00" end="23:59" bindchange="onTimeChange">
+          <view class="right-box">
+            <text class="value">{{serviceTime || '请选择时间'}}</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 🔥 核心修改：给/和单位套单独的text标签 -->
+      <view class="price-row">
+        <view class="price-total">
+          ¥{{selectedService ? selectedService.price : ''}}
+          <text class="price-unit">/{{selectedService ? selectedService.unit : ''}}</text>
+        </view>
+        <button class="submit-btn" bindtap="submitOrder" disabled="{{!familyName || !serviceDate || !serviceTime}}">
+          立即购买
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 家人选择弹窗 -->
+  <view class="picker-popup" wx:if="{{showFamilyList}}">
+    <view class="picker-mask" bindtap="hideFamilyPicker"></view>
+    <view class="picker-content">
+      <view class="picker-header">
+        <text bindtap="hideFamilyPicker">×</text>
+        <text>选择家人</text>
+      </view>
+      <scroll-view class="picker-body" scroll-y>
+        <view wx:for="{{familyList}}" wx:key="id" class="picker-item" bindtap="selectFamilyItem" data-id="{{item.id}}" data-name="{{item.name}}">
+          {{item.name}}
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 无家人自定义弹窗（完全匹配设计图） -->
+  <view class="no-family-popup" wx:if="{{showNoFamilyTip}}">
+    <view class="no-family-mask" bindtap="hideNoFamilyTip"></view>
+    <view class="no-family-content">
+      <text class="no-family-title">您暂时没有绑定的家人</text>
+      <button class="no-family-btn" bindtap="goToBindFamily">去绑定</button>
+    </view>
+  </view>
+</view>

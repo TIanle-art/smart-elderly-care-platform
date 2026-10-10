@@ -1,0 +1,317 @@
+page {
+  background: #f5f5f7;
+}
+
+.page {
+  min-height: 100vh;
+  background: #f5f5f7;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 自定义导航栏 */
+.custom-nav {
+  background: #f5f5f7;
+  box-sizing: border-box;
+}
+
+.nav-content {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.nav-left {
+  position: absolute;
+  left: 24rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-icon {
+  font-size: 52rpx;
+  color: #111111;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #111111;
+}
+
+.nav-right-placeholder {
+  width: 64rpx;
+  height: 64rpx;
+  position: absolute;
+  right: 24rpx;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* tabs */
+.tabs {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 28rpx 0;
+  background: #f5f5f7;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-item {
+  position: relative;
+  margin-right: 56rpx;
+  padding: 18rpx 0 22rpx;
+  font-size: 32rpx;
+  color: #222222;
+  flex-shrink: 0;
+}
+
+.tab-item.active {
+  color: #f26a3d;
+  font-weight: 600;
+}
+
+.tab-item.active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 52rpx;
+  height: 6rpx;
+  border-radius: 6rpx;
+  background: #f26a3d;
+}
+
+/* 列表区域 */
+.list-scroll {
+  flex: 1;
+  height: 0;
+}
+
+.list {
+  padding: 24rpx 28rpx 40rpx;
+  box-sizing: border-box;
+}
+
+/* 卡片 */
+.card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 30rpx 32rpx;
+  margin-bottom: 24rpx;
+  box-sizing: border-box;
+}
+
+.card-row {
+  display: flex;
+  align-items: center;
+}
+
+.card-top {
+  justify-content: space-between;
+}
+
+.date-type-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.date-text {
+  font-size: 30rpx;
+  color: #222222;
+  margin-right: 18rpx;
+}
+
+.type-tag {
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  line-height: 1;
+}
+
+.type-visit {
+  background: #eef6ff;
+  color: #4096ff;
+}
+
+.type-tour {
+  background: #fff5ea;
+  color: #f29a38;
+}
+
+.phone-text {
+  font-size: 30rpx;
+  color: #222222;
+}
+
+.card-middle {
+  position: relative;
+  margin-top: 22rpx;
+  min-height: 76rpx;
+  display: flex;
+  align-items: center;
+}
+
+.time-text {
+  font-size: 66rpx;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1;
+}
+
+.status-text {
+  margin-left: 26rpx;
+  font-size: 34rpx;
+}
+
+.status-pending {
+  color: #f26a3d;
+}
+
+.status-finished,
+.status-cancelled,
+.status-expired {
+  color: #222222;
+}
+
+.cancel-btn {
+  margin: 0;
+
+  position: absolute;
+  right: 20rpx;   /* ⭐ 不要贴边 */
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: inline-block; /* ⭐ 关键 */
+  width: auto;           /* ⭐ 关键 */
+
+  padding: 0 24rpx;      /* ⭐ 控制宽度 */
+
+  height: 52rpx;
+  line-height: 52rpx;
+
+  border-radius: 26rpx;
+  border: 2rpx solid #d9d9d9;
+  background: #ffffff;
+  color: #333333;
+
+  font-size: 26rpx;
+}
+
+.cancel-btn::after {
+  border: none;
+}
+
+.card-bottom {
+  margin-top: 26rpx;
+  font-size: 30rpx;
+  color: #222222;
+  flex-wrap: wrap;
+}
+
+.name-text,
+.family-text {
+  font-size: 30rpx;
+  color: #222222;
+}
+
+.split-line {
+  margin: 0 18rpx;
+  color: #666666;
+}
+
+/* 空状态 */
+.empty-wrap {
+  padding: 160rpx 0;
+  text-align: center;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #999999;
+}
+
+/* 弹窗 */
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  width: 620rpx;
+  background: #ffffff;
+  border-radius: 32rpx;
+  overflow: hidden;
+  text-align: center;
+}
+
+.modal-icon {
+  width: 92rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  border-radius: 50%;
+  background: #f56c6c;
+  color: #ffffff;
+  font-size: 54rpx;
+  margin: 50rpx auto 30rpx;
+}
+
+.modal-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #222222;
+}
+
+.modal-desc {
+  padding: 32rpx 60rpx 46rpx;
+  font-size: 32rpx;
+  line-height: 1.6;
+  color: #999999;
+  white-space: pre-line;
+}
+
+.modal-footer {
+  display: flex;
+  border-top: 1rpx solid #eeeeee;
+}
+
+.modal-btn {
+  flex: 1;
+  height: 100rpx;
+  line-height: 100rpx;
+  font-size: 34rpx;
+  text-align: center;
+}
+
+.left-btn {
+  color: #222222;
+  border-right: 1rpx solid #eeeeee;
+}
+
+.right-btn {
+  color: #ff6b3d;
+}

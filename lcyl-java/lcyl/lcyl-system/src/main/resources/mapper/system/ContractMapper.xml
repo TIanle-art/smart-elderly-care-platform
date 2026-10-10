@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.system.mapper.ContractMapper">
+
+    <resultMap type="com.lcyl.system.domain.dto.ContractDTO" id="ContractResult">
+        <id property="id" column="id"/>
+        <result property="contractNo" column="contract_no"/>
+        <result property="name" column="name"/>
+        <result property="pdfUrl" column="pdf_url"/>
+        <result property="memberPhone" column="member_phone"/>
+        <result property="elderId" column="elder_id"/>
+        <result property="elderName" column="elder_name"/>
+        <result property="memberName" column="member_name"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="status" column="status"/>
+        <result property="sort" column="sort"/>
+        <result property="levelDesc" column="level_desc"/>
+        <result property="checkInNo" column="check_in_no"/>
+        <result property="signDate" column="sign_date"/>
+        <result property="releaseSubmitter" column="release_submitter"/>
+        <result property="releaseDate" column="release_date"/>
+        <result property="releasePdfUrl" column="release_pdf_url"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+
+        <association property="elder" javaType="com.lcyl.system.domain.Elder">
+            <result property="id" column="elder_id"/>
+            <result property="name" column="elder_name"/>
+            <result property="idCardNo" column="id_card_no"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectContractVo">
+        select c.*, e.id_card_no, e.name as elder_name
+        from contract c
+                 left join elder e on c.elder_id = e.id
+    </sql>
+
+    <select id="selectContractList" parameterType="com.lcyl.system.domain.Contract" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
+        <where>
+            <if test="contractNo != null and contractNo != ''">
+                AND c.contract_no LIKE concat('%', #{contractNo}, '%')
+            </if>
+            <if test="elderId != null and elderId != ''">
+                AND c.elder_id LIKE concat('%', #{elderId}, '%')
+            </if>
+            <if test="elderName != null and elderName != ''">
+                AND c.elder_name LIKE concat('%', #{elderName}, '%')
+            </if>
+            <if test="status != null">
+                AND c.status = #{status}
+            </if>
+            <if test="startTime != null">
+                AND c.start_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND c.end_time &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectContractById" parameterType="Long" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
+        where c.elder_id = #{id}
+    </select>
+
+    <insert id="insertContract" parameterType="com.lcyl.system.domain.Contract" useGeneratedKeys="true" keyProperty="id">
+        insert into contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contractNo != null">contract_no,</if>
+            <if test="name != null">name,</if>
+            <if test="pdfUrl != null">pdf_url,</if>
+            <if test="memberPhone != null">member_phone,</if>
+            <if test="elderId != null">elder_id,</if>
+            <if test="elderName != null">elder_name,</if>
+            <if test="memberName != null">member_name,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="status != null">status,</if>
+            <if test="sort != null">sort,</if>
+            <if test="levelDesc != null">level_desc,</if>
+            <if test="checkInNo != null">check_in_no,</if>
+            <if test="signDate != null">sign_date,</if>
+            <if test="releaseSubmitter != null">release_submitter,</if>
+            <if test="releaseDate != null">release_date,</if>
+            <if test="releasePdfUrl != null">release_pdf_url,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="name != null">#{name},</if>
+            <if test="pdfUrl != null">#{pdfUrl},</if>
+            <if test="memberPhone != null">#{memberPhone},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="elderName != null">#{elderName},</if>
+            <if test="memberName != null">#{memberName},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="levelDesc != null">#{levelDesc},</if>
+            <if test="checkInNo != null">#{checkInNo},</if>
+            <if test="signDate != null">#{signDate},</if>
+            <if test="releaseSubmitter != null">#{releaseSubmitter},</if>
+            <if test="releaseDate != null">#{releaseDate},</if>
+            <if test="releasePdfUrl != null">#{releasePdfUrl},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+    <update id="batchUpdateContractStatus">
+        update contract
+        set status = case
+        when now() &lt; start_time then 0
+        when now() > end_time then 2
+        else 1
+        end
+        where status != 3
+    </update>
+    <update id="updateContract" parameterType="com.lcyl.system.domain.Contract">
+        update contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="pdfUrl != null">pdf_url = #{pdfUrl},</if>
+            <if test="memberPhone != null">member_phone = #{memberPhone},</if>
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="elderName != null">elder_name = #{elderName},</if>
+            <if test="memberName != null">member_name = #{memberName},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="levelDesc != null">level_desc = #{levelDesc},</if>
+            <if test="checkInNo != null">check_in_no = #{checkInNo},</if>
+            <if test="signDate != null">sign_date = #{signDate},</if>
+            <if test="releaseSubmitter != null">release_submitter = #{releaseSubmitter},</if>
+            <if test="releaseDate != null">release_date = #{releaseDate},</if>
+            <if test="releasePdfUrl != null">release_pdf_url = #{releasePdfUrl},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteContractById" parameterType="Long">
+        delete from contract where id = #{id}
+    </delete>
+
+    <delete id="deleteContractByIds" parameterType="String">
+        delete from contract where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

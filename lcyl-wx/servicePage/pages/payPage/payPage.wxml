@@ -1,0 +1,20 @@
+<view class="pay-page">
+  <view class="pay-section">
+    <text class="price">¥{{totalPrice}}</text>
+    <text class="pay-time">支付剩余时间：{{countDown}}</text>
+  </view>
+
+  <view class="pay-method">
+    <view class="method-item">
+      <view class="method-left">
+        <image class="pay-icon" src="/images/wechat.png" mode="aspectFit"></image>
+        <text class="method-name">微信支付</text>
+      </view>
+      <text class="check-icon">✓</text>
+    </view>
+  </view>
+
+  <button class="confirm-btn" bindtap="confirmPay" disabled="{{isTimeout}}">
+    {{isTimeout ? '订单已超时' : '确认支付'}}
+  </button>
+</view>

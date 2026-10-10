@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.ContracttMapper">
+    <insert id="insertContract" parameterType="Contract" useGeneratedKeys="true" keyProperty="cid">
+        insert into contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="contractNo != null and contractNo != ''">contract_no,</if>
+            <if test="pdfUrl != null">pdf_url,</if>
+            <if test="memberPhone != null">member_phone,</if>
+            <if test="elderId != null">elder_id,</if>
+            <if test="elderName != null">elder_name,</if>
+            <if test="memberName != null">member_name,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="status != null">status,</if>
+            <if test="sort != null">sort,</if>
+            <if test="levelDesc != null">level_desc,</if>
+            create_time,   <!-- 这里我直接去掉了if，强制插入 -->
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="checkInNo != null">check_in_no,</if>
+            <if test="signDate != null">sign_date,</if>
+            <if test="releaseSubmitter != null">release_submitter,</if>
+            <if test="releaseDate != null">release_date,</if>
+            <if test="releasePdfUrl != null">release_pdf_url,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="contractNo != null and contractNo != ''">#{contractNo},</if>
+            <if test="pdfUrl != null">#{pdfUrl},</if>
+            <if test="memberPhone != null">#{memberPhone},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="elderName != null">#{elderName},</if>
+            <if test="memberName != null">#{memberName},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="levelDesc != null">#{levelDesc},</if>
+            NOW(),   <!-- 这里直接写死数据库当前时间，永远生效 -->
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="checkInNo != null">#{checkInNo},</if>
+            <if test="signDate != null">#{signDate},</if>
+            <if test="releaseSubmitter != null">#{releaseSubmitter},</if>
+            <if test="releaseDate != null">#{releaseDate},</if>
+            <if test="releasePdfUrl != null">#{releasePdfUrl},</if>
+        </trim>
+    </insert>
+
+    <select id="selectContractById" resultType="com.lcyl.system.domain.Contract">
+        select * from contract
+        where elder_id = #{elderId} and del_flag = 0
+    </select>
+
+    <update id="updateContract">
+        update contract
+        set status = #{status},
+            release_date = #{releaseDate},
+            update_time = now(),
+            update_by = #{updateBy}
+        where cid = #{cid}
+    </update>
+</mapper>

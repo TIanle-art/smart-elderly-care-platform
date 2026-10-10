@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.ElderCheckInMapper">
+
+    <resultMap id="BaseResultMap" type="com.lcyl.code.domain.Elderr">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="image" column="image" />
+        <result property="idCardNo" column="id_card_no" />
+        <result property="age" column="age" />
+        <result property="sex" column="sex" />
+        <result property="status" column="status" />
+        <result property="phone" column="phone" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateBy" column="update_by" />
+        <result property="remark" column="remark" />
+        <result property="bedNumber" column="bed_number" />
+        <result property="bedId" column="bed_id" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,image,id_card_no,age,sex,
+        status,phone,create_time,update_time,create_by,
+        update_by,remark,bed_number,bed_id
+    </sql>
+
+    <select id="selectByIdCardNo" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM elder
+        WHERE id_card_no = #{idCardNo}
+        LIMIT 1
+    </select>
+
+    <insert id="insertElder" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO elder
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="name != null">name,</if>
+        <if test="image != null">image,</if>
+        <if test="idCardNo != null">id_card_no,</if>
+        <if test="age != null">age,</if>
+        <if test="sex != null">sex,</if>
+        <if test="status != null">status,</if>
+        <if test="phone != null">phone,</if>
+        create_time,
+        update_time,
+        <if test="createBy != null">create_by,</if>
+        <if test="updateBy != null">update_by,</if>
+        <if test="remark != null">remark,</if>
+        <if test="bedNumber != null">bed_number,</if>
+        <if test="bedId != null">bed_id,</if>
+    </trim>
+    VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="image != null">#{image},</if>
+            <if test="idCardNo != null">#{idCardNo},</if>
+            <if test="age != null">#{age},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="status != null">#{status},</if>
+            <if test="phone != null">#{phone},</if>
+            <choose><when test="createTime != null">#{createTime},</when><otherwise>NOW(),</otherwise></choose>
+            <choose><when test="updateTime != null">#{updateTime},</when><otherwise>NOW(),</otherwise></choose>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="bedNumber != null">#{bedNumber},</if>
+            <if test="bedId != null">#{bedId},</if>
+        </trim>
+    </insert>
+
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.AssignNurseMapper">
+    <delete id="unbindByElderId">
+        delete from lc_elder_nurse_assign
+        where elder_id = #{elderId}
+    </delete>
+
+
+    <select id="selectNurseByElderId" resultType="java.lang.String">
+        select n.name
+        from lc_elder_nurse_assign a
+        join lc_nurse n
+        on a.nurse_id = n.id
+        where a.elder_id = #{elderId}
+    </select>
+
+</mapper>

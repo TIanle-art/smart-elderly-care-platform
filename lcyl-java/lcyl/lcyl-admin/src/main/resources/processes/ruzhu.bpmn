@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+        xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:activiti="http://activiti.org/bpmn"
+        targetNamespace="http://activiti.org/processdef"
+        id="Definitions_1"
+        name="入住申请流程定义">
+
+    <process id="checkinProcess" name="入住申请流程" isExecutable="true">
+
+        <!-- 开始事件：发起入住申请 -->
+        <startEvent id="startEvent" name="发起入住申请"/>
+        <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="task_fill_basic"/>
+
+        <!-- 1. 填写老人基础信息 → 关联lc_elderly_basic -->
+        <userTask id="task_fill_basic" name="填写老人基础信息">
+            <extensionElements>
+                <activiti:assignee>${initiator}</activiti:assignee>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow2" sourceRef="task_fill_basic" targetRef="task_fill_family"/>
+
+        <!-- 2. 填写家属信息 → 新增节点，关联lc_checkin_family -->
+        <userTask id="task_fill_family" name="填写家属信息">
+            <extensionElements>
+                <activiti:assignee>${initiator}</activiti:assignee>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow3" sourceRef="task_fill_family" targetRef="task_upload_files"/>
+
+        <!-- 3. 上传资料 → 关联lc_checkin_attachment -->
+        <userTask id="task_upload_files" name="上传资料">
+            <extensionElements>
+                <activiti:assignee>${initiator}</activiti:assignee>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow4" sourceRef="task_upload_files" targetRef="task_health_evaluate"/>
+
+        <!-- 4. 健康评估 → 关联lc_checkin_health_evaluate -->
+        <userTask id="task_health_evaluate" name="健康评估">
+            <extensionElements>
+                <activiti:candidateGroups>doctor</activiti:candidateGroups>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow5" sourceRef="task_health_evaluate" targetRef="task_ability_evaluate"/>
+
+        <!-- 5. 能力评估 → 关联lc_checkin_ability_evaluate -->
+        <userTask id="task_ability_evaluate" name="能力评估">
+            <extensionElements>
+                <activiti:candidateGroups>doctor</activiti:candidateGroups>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow6" sourceRef="task_ability_evaluate" targetRef="task_make_report"/>
+
+        <!-- 6. 生成评估报告 → 关联lc_checkin_evaluate_report -->
+        <userTask id="task_make_report" name="生成评估报告">
+            <extensionElements>
+                <activiti:candidateGroups>doctor</activiti:candidateGroups>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow7" sourceRef="task_make_report" targetRef="task_initiate_approve"/>
+
+        <!-- 7. 发起审批 → 关联lc_checkin_approve_initiator -->
+        <userTask id="task_initiate_approve" name="发起审批">
+            <extensionElements>
+                <activiti:assignee>${initiator}</activiti:assignee>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow8" sourceRef="task_initiate_approve" targetRef="gateway_approve"/>
+
+        <!-- 8. 审批分支网关（通过/驳回） → 关联lc_checkin_approve_record -->
+        <exclusiveGateway id="gateway_approve" name="审批分支"/>
+
+        <!-- 8.1 审批通过 → 进入入住配置 -->
+        <sequenceFlow id="flow_approve_pass" sourceRef="gateway_approve" targetRef="task_checkin_config">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${approveResult == 'pass'}]]>
+            </conditionExpression>
+        </sequenceFlow>
+
+        <!-- 8.2 审批驳回 → 退回修改 -->
+        <sequenceFlow id="flow_approve_reject" sourceRef="gateway_approve" targetRef="task_reject_modify">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${approveResult == 'reject'}]]>
+            </conditionExpression>
+        </sequenceFlow>
+
+        <!-- 9. 驳回修改 → 可重新编辑所有前置节点数据 -->
+        <userTask id="task_reject_modify" name="驳回修改">
+            <extensionElements>
+                <activiti:assignee>${initiator}</activiti:assignee>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow_reback_to_approve" sourceRef="task_reject_modify" targetRef="gateway_approve"/>
+
+        <!-- 10. 入住配置 → 关联lc_checkin_config -->
+        <userTask id="task_checkin_config" name="入住配置（床位/费用）">
+            <extensionElements>
+                <activiti:candidateGroups>admin,nurse</activiti:candidateGroups>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow9" sourceRef="task_checkin_config" targetRef="task_sign_contract"/>
+
+        <!-- 11. 签约办理 → 关联lc_checkin_contract -->
+        <userTask id="task_sign_contract" name="签约办理">
+            <extensionElements>
+                <activiti:candidateGroups>admin,staff</activiti:candidateGroups>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="flow10" sourceRef="task_sign_contract" targetRef="endEventPass"/>
+
+        <!-- 结束事件：入住成功 -->
+        <endEvent id="endEventPass" name="已入住"/>
+
+    </process>
+</definitions>

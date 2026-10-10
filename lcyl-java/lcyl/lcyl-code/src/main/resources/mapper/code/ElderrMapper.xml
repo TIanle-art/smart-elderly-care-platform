@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.ElderrMapper">
+
+    <update id="updateBedId">
+        update elder set bed_id = #{bedId}, update_time = now() where id = #{elderId}
+    </update>
+
+    <update id="updateBedNo">
+        update elder set bed_number = #{bedNo}, update_time = now() where id = #{elderId}
+    </update>
+
+    <update id="updateStatus">
+        update elder
+        set status = #{status}
+        where id = #{elderId}
+    </update>
+</mapper>

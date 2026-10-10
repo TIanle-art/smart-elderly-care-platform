@@ -1,0 +1,113 @@
+/* 页面整体 */
+.family-page {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+/* 导航栏 */
+.navbar {
+  background-color: #fff;
+  text-align: center;
+  font-size: 36rpx;
+  color: #333;
+  padding: 30rpx 0;
+  border-bottom: 1rpx solid #eee;
+}
+
+/* 家人条目 */
+.family-item {
+  background-color: #fff;
+  margin: 20rpx;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+
+/* 顶部信息行 */
+.family-top {
+  display: flex;
+  align-items: center;
+  padding-bottom: 24rpx;
+  border-bottom: 1rpx solid #eee;
+}
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border: 1rpx solid #ccc;
+  margin-right: 24rpx;
+}
+.family-info {
+  flex: 1;
+}
+.name-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+.name {
+  font-size: 32rpx;
+  color: #333;
+  margin-right: 16rpx;
+}
+.relation {
+  font-size: 24rpx;
+  color: #d81e06;
+  border: 1rpx solid #d81e06;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+}
+.bed {
+  font-size: 26rpx;
+  color: #666;
+}
+.unbind {
+  font-size: 26rpx;
+  color: #409eff;
+}
+
+/* 操作按钮行 */
+.family-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 30rpx;
+  padding-top: 24rpx;
+}
+.action-btn {
+  font-size: 26rpx;
+  color: #333;
+  border: 1rpx solid #ccc;
+  border-radius: 30rpx;
+  padding: 12rpx 30rpx;
+}
+
+/* 空数据状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 0;
+}
+.empty-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 40rpx;
+}
+.empty-tip {
+  font-size: 30rpx;
+  color: #333;
+}
+
+/* 底部绑定按钮 */
+.bind-btn {
+  background-color: #fff;
+  text-align: center;
+  font-size: 34rpx;
+  color: #409eff;
+  padding: 30rpx;
+  margin: 0 20rpx;
+  border-radius: 16rpx;
+  position: fixed;
+  bottom: 40rpx;
+  left: 0;
+  right: 0;
+}

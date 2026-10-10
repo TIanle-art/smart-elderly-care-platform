@@ -1,0 +1,21 @@
+<view class="container">
+  <!-- 房型图片 -->
+  <image class="room-img" src="{{roomInfo.photo}}" mode="aspectFill"></image>
+
+  <!-- 房型信息卡片 -->
+  <view class="info-card">
+    <text class="title">{{roomInfo.name}}</text>
+    <text class="desc">{{roomInfo.introduction}}</text>
+    <text class="price">参考价格：{{roomInfo.price}} 元/月</text>
+
+    <!-- 状态标签 -->
+    <view class="status-box">
+      <view wx:if="{{roomInfo.status === 1}}" class="status-tag status-ok">
+        可预订
+      </view>
+      <view wx:else class="status-tag status-no">
+        已满房
+      </view>
+    </view>
+  </view>
+</view>

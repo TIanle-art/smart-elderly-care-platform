@@ -1,0 +1,65 @@
+/* 页面基础 */
+.success-page {
+    background: #fff;
+    min-height: 100vh;
+  }
+
+  /* 成功内容 */
+  .success-content {
+    text-align: center;
+    padding-top: 120rpx;
+  }
+  .success-icon {
+    width: 120rpx;
+    height: 120rpx;
+    background: #21DC77; 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30rpx;
+  }
+  .success-icon text {
+    color: #fff;
+    font-size: 60rpx;
+    font-weight: bold;
+  }
+  .success-title {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 20rpx;
+  }
+  .success-img{
+    width: 70px;
+    height: 70px;
+  }
+  .success-desc {
+    font-size: 14px;
+    color: #999;
+    display: block;
+    margin-bottom: 40rpx;
+  }
+  
+  /* 按钮组 */
+  .btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 30rpx;
+  }
+  .btn-outline {
+    border: 1rpx solid #999;
+    color: #333;
+    background: #fff;
+    border-radius: 50rpx;
+    padding: 20rpx 40rpx;
+    font-size: 16px;
+  }
+  .btn-solid {
+    background: #FE6A3D; /* 品牌色 */
+    color: #fff;
+    border-radius: 50rpx;
+    padding: 20rpx 40rpx;
+    font-size: 16px;
+    border: none;
+  }

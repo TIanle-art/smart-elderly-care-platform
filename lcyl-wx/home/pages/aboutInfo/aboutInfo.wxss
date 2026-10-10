@@ -1,0 +1,420 @@
+page {
+  background: #f5f6f8;
+}
+
+.page {
+  height: 100vh;
+  background: #f5f6f8;
+  overflow: hidden;
+  position: relative;
+}
+
+
+.custom-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.nav-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-left {
+  position: absolute;
+  left: 24rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 68rpx;
+  height: 68rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+.back-icon {
+  font-size: 52rpx;
+  color: #222;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #111;
+}
+
+.nav-right-placeholder {
+  position: absolute;
+  right: 24rpx;
+  width: 68rpx;
+  height: 68rpx;
+}
+
+
+.page-scroll {
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.map-wrap {
+  width: 100%;
+  height: 420rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.map-marker-box {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.marker {
+  width: 54rpx;
+  height: 54rpx;
+  background: linear-gradient(180deg, #ff814a 0%, #ff5f2e 100%);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  position: relative;
+}
+
+.marker::after {
+  content: '';
+  position: absolute;
+  width: 20rpx;
+  height: 20rpx;
+  background: #fff;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.marker-text {
+  margin-top: 12rpx;
+  font-size: 30rpx;
+  color: #ff6a3c;
+  font-weight: 700;
+}
+
+.info-card {
+  margin: -24rpx 20rpx 0;
+  background: #fff;
+  border-radius: 28rpx;
+  padding: 30rpx 24rpx 36rpx;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.06);
+}
+
+.header-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.institution-name {
+  font-size: 46rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+
+.institution-address {
+  margin-top: 8rpx;
+  font-size: 30rpx;
+  color: #8f8f8f;
+  line-height: 1.6;
+}
+
+.divider {
+  height: 1rpx;
+  background: #f0f0f0;
+  margin: 24rpx 0 18rpx;
+}
+
+/* 信息行：关键优化 */
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.info-row-top {
+  align-items: flex-start;
+}
+
+.info-row-top .info-label-wrap {
+  align-items: flex-start;
+  padding-top: 4rpx;
+}
+
+.info-label-wrap {
+  width: 230rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+.info-icon {
+  width: 34rpx;
+  margin-right: 10rpx;
+  text-align: center;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.info-label {
+  width: auto;
+  font-size: 32rpx;
+  color: #222;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.info-value-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.info-value {
+  font-size: 32rpx;
+  color: #9a9a9a;
+  line-height: 1.8;
+  word-break: break-word;
+}
+
+.section {
+  margin-top: 38rpx;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18rpx;
+}
+
+.section-line {
+  width: 8rpx;
+  height: 28rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(180deg, #ff8651 0%, #ff6233 100%);
+  margin-right: 12rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.section-desc {
+  display: block;
+  font-size: 30rpx;
+  color: #666;
+  line-height: 1.9;
+  margin-top: 10rpx;
+  text-align: justify;
+}
+
+.gallery-list {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-top: 12rpx;
+}
+
+.gallery-image {
+  width: 206rpx;
+  height: 150rpx;
+  border-radius: 18rpx;
+  background: #f3f3f3;
+}
+
+.bottom-safe-space {
+  height: 170rpx;
+}
+
+
+.bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 24rpx;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+
+
+.call-btn {
+  width: 560rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 46rpx;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff8a57 0%, #ff6a3c 100%);
+  box-shadow: 0 10rpx 24rpx rgba(255, 106, 60, 0.22);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.call-btn::after {
+  border: none;
+}
+
+/* 图片预览弹层 */
+.viewer-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewer-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewer-count {
+  position: absolute;
+  top: 120rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: 600;
+}
+
+.viewer-image {
+  width: 86%;
+  height: 58%;
+}
+
+.viewer-close {
+  position: absolute;
+  bottom: 140rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(255, 255, 255, 0.7);
+  color: #fff;
+  font-size: 52rpx;
+  line-height: 82rpx;
+  text-align: center;
+}
+
+/* 中间弹窗 */
+.popup-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-popup {
+  width: 86%;
+  background: #fff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  animation: popupScale 0.2s ease-out;
+}
+
+.popup-content {
+  padding: 34rpx 28rpx 26rpx;
+  text-align: center;
+}
+
+.popup-tip {
+  display: block;
+  font-size: 30rpx;
+  line-height: 1.7;
+  color: #444;
+}
+
+.popup-phone {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 54rpx;
+  font-weight: 700;
+  color: #222;
+}
+
+.popup-actions {
+  display: flex;
+  border-top: 1rpx solid #eee;
+}
+
+.popup-btn {
+  flex: 1;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34rpx;
+}
+
+.cancel-btn {
+  color: #444;
+  border-right: 1rpx solid #eee;
+}
+
+.confirm-btn {
+  color: #ff6a3c;
+  font-weight: 600;
+}
+
+@keyframes popupScale {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

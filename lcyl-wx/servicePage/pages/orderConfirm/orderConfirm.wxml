@@ -1,0 +1,36 @@
+<view class="container">
+  <!-- 服务信息卡片 -->
+  <view class="card">
+    <view class="service-row">
+      <image class="service-img" src="{{detail.imageUrl}}" mode="aspectFill"></image>
+      <view class="service-info">
+        <text class="service-title">{{detail.itemName}}</text>
+        <text class="service-price">¥{{detail.price}}/{{detail.unit}}</text>
+      </view>
+    </view>
+
+    <view class="info-row">
+      <text class="label">服务家人</text>
+      <text class="value">{{familyName}}</text>
+    </view>
+    <view class="info-row">
+      <text class="label">期望服务时间</text>
+      <text class="value">{{serviceTime}}</text>
+    </view>
+
+    <view class="total-row">
+      <text class="label">小计</text>
+      <text class="total-price">¥{{detail.price}}</text>
+    </view>
+  </view>
+
+  <!-- 备注输入 -->
+  <view class="remark-card">
+    <text class="remark-title">备注</text>
+    <textarea class="remark-input" placeholder="请输入备注信息~" maxlength="50" bindinput="onRemarkInput"></textarea>
+    <text class="word-count">{{remark.length}}/50</text>
+  </view>
+
+  <!-- 提交订单按钮 -->
+  <button class="submit-btn" bindtap="submitOrder">提交订单</button>
+</view>

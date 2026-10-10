@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.ElderLeaveApproveRecordMapper">
+
+    <resultMap type="ElderLeaveApproveRecord" id="ElderLeaveApproveRecordResult">
+        <result property="id"    column="id"    />
+        <result property="leaveId"    column="leave_id"    />
+        <result property="processInstanceId"    column="process_instance_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="nodeKey"    column="node_key"    />
+        <result property="nodeName"    column="node_name"    />
+        <result property="approveUserId"    column="approve_user_id"    />
+        <result property="approveUserName"    column="approve_user_name"    />
+        <result property="approveRoleName"    column="approve_role_name"    />
+        <result property="approveResult"    column="approve_result"    />
+        <result property="approveOpinion"    column="approve_opinion"    />
+        <result property="sortNo"    column="sort_no"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectElderLeaveApproveRecordVo">
+        select id, leave_id, process_instance_id, task_id, node_key, node_name, approve_user_id, approve_user_name, approve_role_name, approve_result, approve_opinion, sort_no, approve_time, create_time from lc_elder_leave_approve_record
+    </sql>
+
+    <select id="selectElderLeaveApproveRecordList" parameterType="ElderLeaveApproveRecord" resultMap="ElderLeaveApproveRecordResult">
+        <include refid="selectElderLeaveApproveRecordVo"/>
+        <where>
+            <if test="leaveId != null "> and leave_id = #{leaveId}</if>
+            <if test="processInstanceId != null  and processInstanceId != ''"> and process_instance_id = #{processInstanceId}</if>
+            <if test="taskId != null  and taskId != ''"> and task_id = #{taskId}</if>
+            <if test="nodeKey != null  and nodeKey != ''"> and node_key = #{nodeKey}</if>
+            <if test="nodeName != null  and nodeName != ''"> and node_name like concat('%', #{nodeName}, '%')</if>
+            <if test="approveUserId != null "> and approve_user_id = #{approveUserId}</if>
+            <if test="approveUserName != null  and approveUserName != ''"> and approve_user_name like concat('%', #{approveUserName}, '%')</if>
+            <if test="approveRoleName != null  and approveRoleName != ''"> and approve_role_name like concat('%', #{approveRoleName}, '%')</if>
+            <if test="approveResult != null  and approveResult != ''"> and approve_result = #{approveResult}</if>
+            <if test="approveOpinion != null  and approveOpinion != ''"> and approve_opinion = #{approveOpinion}</if>
+            <if test="sortNo != null "> and sort_no = #{sortNo}</if>
+            <if test="approveTime != null "> and approve_time = #{approveTime}</if>
+        </where>
+    </select>
+
+    <select id="selectElderLeaveApproveRecordById" parameterType="Long" resultMap="ElderLeaveApproveRecordResult">
+        <include refid="selectElderLeaveApproveRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertElderLeaveApproveRecord" parameterType="ElderLeaveApproveRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_elder_leave_approve_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="leaveId != null">leave_id,</if>
+            <if test="processInstanceId != null">process_instance_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="nodeKey != null">node_key,</if>
+            <if test="nodeName != null">node_name,</if>
+            <if test="approveUserId != null">approve_user_id,</if>
+            <if test="approveUserName != null">approve_user_name,</if>
+            <if test="approveRoleName != null">approve_role_name,</if>
+            <if test="approveResult != null and approveResult != ''">approve_result,</if>
+            <if test="approveOpinion != null">approve_opinion,</if>
+            <if test="sortNo != null">sort_no,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="leaveId != null">#{leaveId},</if>
+            <if test="processInstanceId != null">#{processInstanceId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="nodeKey != null">#{nodeKey},</if>
+            <if test="nodeName != null">#{nodeName},</if>
+            <if test="approveUserId != null">#{approveUserId},</if>
+            <if test="approveUserName != null">#{approveUserName},</if>
+            <if test="approveRoleName != null">#{approveRoleName},</if>
+            <if test="approveResult != null and approveResult != ''">#{approveResult},</if>
+            <if test="approveOpinion != null">#{approveOpinion},</if>
+            <if test="sortNo != null">#{sortNo},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateElderLeaveApproveRecord" parameterType="ElderLeaveApproveRecord">
+        update lc_elder_leave_approve_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="leaveId != null">leave_id = #{leaveId},</if>
+            <if test="processInstanceId != null">process_instance_id = #{processInstanceId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="nodeKey != null">node_key = #{nodeKey},</if>
+            <if test="nodeName != null">node_name = #{nodeName},</if>
+            <if test="approveUserId != null">approve_user_id = #{approveUserId},</if>
+            <if test="approveUserName != null">approve_user_name = #{approveUserName},</if>
+            <if test="approveRoleName != null">approve_role_name = #{approveRoleName},</if>
+            <if test="approveResult != null and approveResult != ''">approve_result = #{approveResult},</if>
+            <if test="approveOpinion != null">approve_opinion = #{approveOpinion},</if>
+            <if test="sortNo != null">sort_no = #{sortNo},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElderLeaveApproveRecordById" parameterType="Long">
+        delete from lc_elder_leave_approve_record where id = #{id}
+    </delete>
+
+    <delete id="deleteElderLeaveApproveRecordByIds" parameterType="String">
+        delete from lc_elder_leave_approve_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

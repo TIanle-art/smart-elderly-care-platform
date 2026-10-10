@@ -1,0 +1,38 @@
+<view class="bind-container">
+  <!-- 表单卡片 -->
+  <view class="form-card">
+    <!-- 家人姓名 -->
+    <view class="form-item">
+      <view class="form-left">
+        <text class="form-label">家人姓名</text>
+      </view>
+      <!-- 选择器：从 elderList 中选择家人 -->
+      <picker mode="selector" range="{{elderList}}" range-key="name" value="{{elderIndex}}" bindchange="onElderChange">
+        <view class="form-input">
+          {{familyName || '请选择家人姓名'}}
+        </view>
+      </picker>
+    </view>
+
+    <!-- 身份证号码 -->
+    <view class="form-item">
+      <view class="form-left">
+        <text class="form-label">身份证号码</text>
+      </view>
+      <input class="form-input" placeholder="请输入18位身份证号码" value="{{idCard}}" bindinput="onIdCardInput" />
+    </view>
+
+    <!-- 称呼 -->
+    <view class="form-item">
+      <view class="form-left">
+        <text class="form-label">您称呼他/她</text>
+      </view>
+      <input class="form-input" placeholder="请输入称呼" value="{{relation}}" bindinput="onRelationInput" />
+    </view>
+  </view>
+
+  <!-- 立即绑定按钮 -->
+  <view class="bind-btn" bindtap="confirmBind">
+    <text class="btn-text">立即绑定</text>
+  </view>
+</view>

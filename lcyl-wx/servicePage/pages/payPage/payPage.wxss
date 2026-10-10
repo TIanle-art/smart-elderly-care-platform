@@ -1,0 +1,66 @@
+.pay-page {
+    background: #F7F8FA;
+    min-height: 100vh;
+    padding: 20rpx;
+  }
+  
+  .pay-section {
+    background: #fff;
+    border-radius: 16rpx;
+    padding: 60rpx 30rpx;
+    text-align: center;
+    margin-bottom: 30rpx;
+  }
+  .price {
+    font-size: 48rpx;
+    font-weight: bold;
+    color: #333;
+  }
+  .pay-time {
+    font-size: 24rpx;
+    color: #999;
+    margin-top: 20rpx;
+    display: block;
+  }
+  
+  .pay-method {
+    background: #fff;
+    border-radius: 16rpx;
+    padding: 30rpx;
+  }
+  .method-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .method-left {
+    display: flex;
+    align-items: center;
+  }
+  .pay-icon {
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 20rpx;
+  }
+  .method-name {
+    font-size: 28rpx;
+    color: #333;
+  }
+  .check-icon {
+    font-size: 32rpx;
+    color: #FE6A3D;
+  }
+  
+  .confirm-btn {
+    background: #FE6A3D;
+    color: #fff;
+    font-size: 30rpx;
+    border-radius: 50rpx;
+    padding: 28rpx;
+    margin-top: 40rpx;
+    border: none;
+  }
+  .confirm-btn[disabled] {
+    background: #ccc !important;
+    color: #fff !important;
+  }

@@ -1,0 +1,32 @@
+<view class="family-page">
+  <!-- 顶部导航栏 -->
+  <view class="navbar">我的家人</view>
+
+  <!-- 有数据状态：循环展示家人列表 -->
+  <view wx:for="{{familyList}}" wx:key="id" class="family-item">
+    <view class="family-top">
+      <image class="avatar" src="{{item.image}}"></image>
+      <view class="family-info">
+        <view class="name-row">
+          <text class="name">{{item.name}}</text>
+          <text class="relation">{{item.greeting}}</text>
+        </view>
+        <text class="bed">床位：{{item.bedNumber}}</text>
+      </view>
+      <text class="unbind" bindtap="handleUnbind" data-id="{{item.id}}">解绑</text>
+    </view>
+    <view class="family-actions">
+      <!-- <view class="action-btn" bindtap="goToHealth" data-id="{{item.id}}">健康数据</view> -->
+      <view class="action-btn" bindtap="goToBill" data-id="{{item.id}}">我的账单</view>
+    </view>
+  </view>
+
+  <!-- 无数据状态 -->
+  <view wx:if="{{familyList.length === 0}}" class="empty-state">
+    <image class="empty-icon" src="/images/icon-emotion.png"></image>
+    <text class="empty-tip">您暂时没有绑定的家人</text>
+  </view>
+
+  <!-- 底部绑定按钮 -->
+  <view class="bind-btn" bindtap="goToBind">绑定家人</view>
+</view>

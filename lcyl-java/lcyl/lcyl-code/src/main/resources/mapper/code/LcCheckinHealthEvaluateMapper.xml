@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcCheckinHealthEvaluateMapper">
+    
+    <resultMap type="LcCheckinHealthEvaluate" id="LcCheckinHealthEvaluateResult">
+        <result property="id"    column="id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="height"    column="height"    />
+        <result property="weight"    column="weight"    />
+        <result property="bloodPressure"    column="blood_pressure"    />
+        <result property="bloodSugar"    column="blood_sugar"    />
+        <result property="chronicDisease"    column="chronic_disease"    />
+        <result property="allergy"    column="allergy"    />
+        <result property="evaluateDoctor"    column="evaluate_doctor"    />
+        <result property="evaluateTime"    column="evaluate_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectLcCheckinHealthEvaluateVo">
+        select id, apply_id, height, weight, blood_pressure, blood_sugar, chronic_disease, allergy, evaluate_doctor, evaluate_time, del_flag, create_by, create_time from lc_checkin_health_evaluate
+    </sql>
+
+    <select id="selectLcCheckinHealthEvaluateList" parameterType="LcCheckinHealthEvaluate" resultMap="LcCheckinHealthEvaluateResult">
+        <include refid="selectLcCheckinHealthEvaluateVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="height != null "> and height = #{height}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="bloodPressure != null  and bloodPressure != ''"> and blood_pressure = #{bloodPressure}</if>
+            <if test="bloodSugar != null "> and blood_sugar = #{bloodSugar}</if>
+            <if test="chronicDisease != null  and chronicDisease != ''"> and chronic_disease = #{chronicDisease}</if>
+            <if test="allergy != null  and allergy != ''"> and allergy = #{allergy}</if>
+            <if test="evaluateDoctor != null  and evaluateDoctor != ''"> and evaluate_doctor = #{evaluateDoctor}</if>
+            <if test="evaluateTime != null "> and evaluate_time = #{evaluateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLcCheckinHealthEvaluateById" parameterType="Long" resultMap="LcCheckinHealthEvaluateResult">
+        <include refid="selectLcCheckinHealthEvaluateVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcCheckinHealthEvaluate" parameterType="LcCheckinHealthEvaluate" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_checkin_health_evaluate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">apply_id,</if>
+            <if test="height != null">height,</if>
+            <if test="weight != null">weight,</if>
+            <if test="bloodPressure != null">blood_pressure,</if>
+            <if test="bloodSugar != null">blood_sugar,</if>
+            <if test="chronicDisease != null">chronic_disease,</if>
+            <if test="allergy != null">allergy,</if>
+            <if test="evaluateDoctor != null">evaluate_doctor,</if>
+            <if test="evaluateTime != null">evaluate_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">#{applyId},</if>
+            <if test="height != null">#{height},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="bloodPressure != null">#{bloodPressure},</if>
+            <if test="bloodSugar != null">#{bloodSugar},</if>
+            <if test="chronicDisease != null">#{chronicDisease},</if>
+            <if test="allergy != null">#{allergy},</if>
+            <if test="evaluateDoctor != null">#{evaluateDoctor},</if>
+            <if test="evaluateTime != null">#{evaluateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcCheckinHealthEvaluate" parameterType="LcCheckinHealthEvaluate">
+        update lc_checkin_health_evaluate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null">apply_id = #{applyId},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="bloodPressure != null">blood_pressure = #{bloodPressure},</if>
+            <if test="bloodSugar != null">blood_sugar = #{bloodSugar},</if>
+            <if test="chronicDisease != null">chronic_disease = #{chronicDisease},</if>
+            <if test="allergy != null">allergy = #{allergy},</if>
+            <if test="evaluateDoctor != null">evaluate_doctor = #{evaluateDoctor},</if>
+            <if test="evaluateTime != null">evaluate_time = #{evaluateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcCheckinHealthEvaluateById" parameterType="Long">
+        delete from lc_checkin_health_evaluate where id = #{id}
+    </delete>
+
+    <delete id="deleteLcCheckinHealthEvaluateByIds" parameterType="String">
+        delete from lc_checkin_health_evaluate where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcRetreatBillMapper">
+
+    <resultMap type="com.lcyl.code.domain.LcRetreatBill" id="BaseResultMap">
+        <id column="id" property="id"/>
+        <result column="retreat_id" property="retreatId"/>
+        <result column="bill_json" property="billJson"/>
+        <result column="refund_voucher_url" property="refundVoucherUrl"/>
+        <result column="trading_channel" property="tradingChannel"/>
+        <result column="elder_id" property="elderId"/>
+        <result column="is_refund" property="isRefund"/>
+        <result column="refund_amount" property="refundAmount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO lc_retreat_bill (
+            retreat_id, bill_json, refund_voucher_url, trading_channel, elder_id,
+            is_refund, refund_amount, create_time, update_time, create_by, update_by, remark
+        ) VALUES (
+                     #{retreatId}, #{billJson}, #{refundVoucherUrl}, #{tradingChannel}, #{elderId},
+                     #{isRefund}, #{refundAmount}, #{createTime}, #{updateTime}, #{createBy}, #{updateBy}, #{remark}
+                 )
+    </insert>
+
+    <update id="updateById">
+        UPDATE lc_retreat_bill
+        <set>
+            <if test="refundVoucherUrl != null">refund_voucher_url = #{refundVoucherUrl},</if>
+            <if test="tradingChannel != null">trading_channel = #{tradingChannel},</if>
+            <if test="isRefund != null">is_refund = #{isRefund},</if>
+            <if test="refundAmount != null">refund_amount = #{refundAmount},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectLatestByRetreatId" resultMap="BaseResultMap">
+        SELECT * FROM lc_retreat_bill
+        WHERE retreat_id = #{retreatId}
+        ORDER BY create_time DESC LIMIT 1
+    </select>
+</mapper>

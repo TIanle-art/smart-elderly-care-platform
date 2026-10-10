@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcCheckinFamilyMapper">
+    
+    <resultMap type="LcCheckinFamily" id="LcCheckinFamilyResult">
+        <result property="id"    column="id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="familyName"    column="family_name"    />
+        <result property="relation"    column="relation"    />
+        <result property="phone"    column="phone"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="address"    column="address"    />
+        <result property="emergencyContact"    column="emergency_contact"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectLcCheckinFamilyVo">
+        select id, apply_id, family_name, relation, phone, id_card, address, emergency_contact, del_flag, create_by, create_time, update_by, update_time from lc_checkin_family
+    </sql>
+
+    <select id="selectLcCheckinFamilyList" parameterType="LcCheckinFamily" resultMap="LcCheckinFamilyResult">
+        <include refid="selectLcCheckinFamilyVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="familyName != null  and familyName != ''"> and family_name like concat('%', #{familyName}, '%')</if>
+            <if test="relation != null  and relation != ''"> and relation = #{relation}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="emergencyContact != null  and emergencyContact != ''"> and emergency_contact = #{emergencyContact}</if>
+        </where>
+    </select>
+    
+    <select id="selectLcCheckinFamilyById" parameterType="Long" resultMap="LcCheckinFamilyResult">
+        <include refid="selectLcCheckinFamilyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcCheckinFamily" parameterType="LcCheckinFamily" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_checkin_family
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">apply_id,</if>
+            <if test="familyName != null and familyName != ''">family_name,</if>
+            <if test="relation != null">relation,</if>
+            <if test="phone != null">phone,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="address != null">address,</if>
+            <if test="emergencyContact != null">emergency_contact,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">#{applyId},</if>
+            <if test="familyName != null and familyName != ''">#{familyName},</if>
+            <if test="relation != null">#{relation},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="address != null">#{address},</if>
+            <if test="emergencyContact != null">#{emergencyContact},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcCheckinFamily" parameterType="LcCheckinFamily">
+        update lc_checkin_family
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null">apply_id = #{applyId},</if>
+            <if test="familyName != null and familyName != ''">family_name = #{familyName},</if>
+            <if test="relation != null">relation = #{relation},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="emergencyContact != null">emergency_contact = #{emergencyContact},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcCheckinFamilyById" parameterType="Long">
+        delete from lc_checkin_family where id = #{id}
+    </delete>
+
+    <delete id="deleteLcCheckinFamilyByIds" parameterType="String">
+        delete from lc_checkin_family where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

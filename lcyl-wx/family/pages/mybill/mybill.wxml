@@ -1,0 +1,56 @@
+<!-- 标签栏 -->
+<view class="tab-bar">
+  <view 
+    wx:for="{{tabs}}" 
+    wx:key="index"
+    class="tab-item {{currentTab === index ? 'active' : ''}}"
+    bindtap="switchTab"
+    data-index="{{index}}"
+    data-tradestatus="{{item.tradeStatus}}"
+  >
+    {{item.name}}
+  </view>
+</view>
+
+<!-- 账单列表 -->
+<view class="bill-list">
+  <view wx:for="{{billList}}" wx:key="id" class="bill-card">
+    <view class="card-header">
+      <text class="bill-no">{{item.billNo}}</text>
+      <text class="status-tag {{item.tradeStatus == 0 ? 'pending' : 'paid'}}">
+        {{item.tradeStatus == 0 ? '待支付' : '已支付'}}
+      </text>
+    </view>
+
+    <view class="card-title">
+      <text class="title-text">{{item.billType == 1? "月度账单" :"费用账单"}}</text>
+      <text class="total-amount">¥{{item.billAmount}}</text>
+    </view>
+
+    <view class="card-info">
+      <view class="info-row">
+        <text>家人姓名：{{item.elderName}}</text>
+        <text>账单月份：{{item.billMonth}}</text>
+      </view>
+      <view class="info-row">
+        <text>创建时间：{{item.createTime}}</text>
+      </view>
+      <view class="info-row">
+        <text>支付截止时间：{{item.payDeadline}}</text>
+      </view>
+    </view>
+
+    <view class="card-footer">
+      <view class="amount-row">
+        <text>应付：</text>
+        <text class="pay-amount">¥{{item.payableAmount}}</text>
+      </view>
+      <view class="btn-group">
+        <button class="btn detail-btn" bindtap="goToBill" data-id="{{item.id}}">查看明细</button>
+        <button wx:if="{{item.tradeStatus === 0}}" class="btn pay-btn" bindtap="goPay" data-id="{{item.id}}">去支付</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{billList.length === 0}}" class="empty-tip">暂无账单数据</view>
+</view>

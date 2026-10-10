@@ -1,0 +1,82 @@
+<view class="page">
+  <view class="content">
+    <view wx:if="{{loading}}" class="loading-wrap">加载中...</view>
+
+    <block wx:else>
+      <view class="status-card">
+        <view class="status-title">{{billView.title}}</view>
+        <view class="status-tag">{{billView.statusText}}</view>
+      </view>
+
+      <view class="card">
+        <view class="card-title">账单信息</view>
+        <view class="info-row">
+          <text class="label">老人姓名</text>
+          <text class="value">{{billView.elderNameText}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">身份证号</text>
+          <text class="value">{{billView.elderIdCardText}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">床位号</text>
+          <text class="value">{{billView.bedNoText}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">账单月份</text>
+          <text class="value">{{billView.billMonthText}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">创建时间</text>
+          <text class="value">{{billView.createTimeText}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">支付截止时间</text>
+          <text class="value">{{billView.payDeadlineText}}</text>
+        </view>
+        <view class="info-row amount-row">
+          <text class="label">账单金额</text>
+          <text class="value amount">¥{{billView.billAmountText}}</text>
+        </view>
+        <view class="info-row amount-row">
+          <text class="label">应付金额</text>
+          <text class="value amount">¥{{billView.payableAmountText}}</text>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-title">账单明细</view>
+        <view wx:if="{{billItemList.length === 0}}" class="empty-text">暂无账单明细</view>
+        <block wx:for="{{billItemList}}" wx:key="id">
+          <view class="item-row">
+            <view class="item-main">
+              <text class="item-name">{{item.feeName || '-'}}</text>
+              <text class="item-desc">{{item.serviceContent || '-'}}</text>
+            </view>
+            <text class="item-amount">{{item.itemType === '2' ? '-' : ''}}¥{{item.amount}}</text>
+          </view>
+        </block>
+      </view>
+
+      <view wx:if="{{paymentRecord}}" class="card">
+        <view class="card-title">支付记录</view>
+        <view class="info-row">
+          <text class="label">支付方式</text>
+          <text class="value">{{paymentRecord.payMethod || '-'}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">支付时间</text>
+          <text class="value">{{paymentRecord.payTime || '-'}}</text>
+        </view>
+        <view class="info-row amount-row">
+          <text class="label">支付金额</text>
+          <text class="value amount">¥{{paymentRecord.payAmount}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view wx:if="{{!loading && billInfo.id && billInfo.tradeStatus == '0'}}" class="bottom-bar">
+    <button class="pay-btn" bindtap="handlePay">去支付</button>
+  </view>
+</view>

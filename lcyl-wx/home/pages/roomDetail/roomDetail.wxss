@@ -1,0 +1,79 @@
+/* 整体容器 与项目主页面风格统一 */
+.container {
+  background-color: #f2f2f2;
+  min-height: 100vh;
+  padding: 20rpx;
+}
+
+/* 房间图片 圆角更大、更精致 */
+.room-img {
+  width: 100%;
+  height: 380rpx;
+  border-radius: 20rpx;
+  object-fit: cover;
+  margin-bottom: 24rpx;
+}
+
+/* 信息卡片 统一主项目圆角、阴影、留白 */
+.info-card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 40rpx 32rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 标题 加粗加深 更有层级 */
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1a1a1a;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+/* 描述 行高舒适 颜色柔和 */
+.desc {
+  font-size: 28rpx;
+  color: #888;
+  line-height: 1.6;
+  display: block;
+  margin-bottom: 24rpx;
+}
+
+/* 价格 统一项目主色 #FE6A3D */
+.price {
+  font-size: 32rpx;
+  color: #FE6A3D;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 30rpx;
+}
+
+/* 状态标签容器 */
+.status-box {
+  display: flex;
+  align-items: center;
+}
+
+/* 标签样式 柔和圆角 */
+.status-tag {
+  display: inline-block;
+  padding: 12rpx 26rpx;
+  border-radius: 50rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+/* 可预订 统一绿色 */
+.status-ok {
+  background-color: #f0fff4;
+  color: #00c853;
+  border: none;
+}
+
+/* 已满房 统一红色 */
+.status-no {
+  background-color: #fff1f0;
+  color: #ff574d;
+  border: none;
+}

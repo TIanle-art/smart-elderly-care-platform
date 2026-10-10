@@ -1,0 +1,41 @@
+/* 页面背景 */
+.contract-page {
+    background-color: #f5f5f5;
+    padding: 20rpx;
+    min-height: 100vh;
+  }
+  
+  /* 合同外框 —— 非常像真实纸质合同 */
+  .contract-box {
+    background-color: #fff;
+    border-radius: 16rpx;
+    padding: 40rpx;
+    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+    border: 1rpx solid #eee;
+  }
+  
+  /* 合同正文 */
+  .ht {
+    font-size: 28rpx;
+    line-height: 1.9;
+    color: #222;
+    text-align: justify;
+    letter-spacing: 1rpx;
+  }
+  
+  /* 高亮样式 */
+  .highlight {
+    color: #ff6b35;
+    text-decoration: underline;
+    padding: 0 8rpx;
+  }
+  
+  /* 放大 */
+  .large {
+    font-size: 34rpx !important;
+  }
+  
+  /* 加粗 */
+  .bold {
+    font-weight: bold !important;
+  }

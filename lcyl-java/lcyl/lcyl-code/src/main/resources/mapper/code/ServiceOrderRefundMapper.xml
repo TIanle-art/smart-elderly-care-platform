@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.ServiceOrderRefundMapper">
+
+    <resultMap type="ServiceOrderRefund" id="ServiceOrderRefundResult">
+        <result property="id" column="id" />
+        <result property="refundNo" column="refund_no" />
+        <result property="orderId" column="order_id" />
+        <result property="orderNo" column="order_no" />
+        <result property="refundAmount" column="refund_amount" />
+        <result property="refundStatus" column="refund_status" />
+        <result property="applicantId" column="applicant_id" />
+        <result property="applicantName" column="applicant_name" />
+        <result property="applicantType" column="applicant_type" />
+        <result property="applyTime" column="apply_time" />
+        <result property="refundTime" column="refund_time" />
+        <result property="refundReason" column="refund_reason" />
+        <result property="refundChannel" column="refund_channel" />
+        <result property="refundMethod" column="refund_method" />
+        <result property="failCode" column="fail_code" />
+        <result property="failReason" column="fail_reason" />
+        <result property="remark" column="remark" />
+        <result property="delFlag" column="del_flag" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="orderStatus" column="order_status" />
+    </resultMap>
+
+    <sql id="selectServiceOrderRefundVo">
+        select
+            r.id,
+            r.refund_no,
+            r.order_id,
+            r.order_no,
+            r.refund_amount,
+            r.refund_status,
+            r.applicant_id,
+            r.applicant_name,
+            r.applicant_type,
+            r.apply_time,
+            r.refund_time,
+            r.refund_reason,
+            r.refund_channel,
+            r.refund_method,
+            r.fail_code,
+            r.fail_reason,
+            r.remark,
+            r.del_flag,
+            r.create_by,
+            r.create_time,
+            r.update_by,
+            r.update_time,
+            o.order_status as order_status
+        from lc_service_order_refund r
+                 left join lc_service_order o on r.order_id = o.id
+    </sql>
+
+    <select id="selectServiceOrderRefundList" parameterType="ServiceOrderRefund" resultMap="ServiceOrderRefundResult">
+        <include refid="selectServiceOrderRefundVo"/>
+        <where>
+            r.del_flag = '0'
+            <if test="refundNo != null and refundNo != ''">
+                and r.refund_no like concat('%', #{refundNo}, '%')
+            </if>
+            <if test="orderNo != null and orderNo != ''">
+                and r.order_no like concat('%', #{orderNo}, '%')
+            </if>
+            <if test="refundStatus != null and refundStatus != ''">
+                and r.refund_status = #{refundStatus}
+            </if>
+            <if test="applicantName != null and applicantName != ''">
+                and r.applicant_name like concat('%', #{applicantName}, '%')
+            </if>
+            <if test="orderStatus != null and orderStatus != ''">
+                and o.order_status = #{orderStatus}
+            </if>
+            <if test="params != null and params.beginApplyTime != null and params.beginApplyTime != '' and params.endApplyTime != null and params.endApplyTime != ''">
+                and r.apply_time between #{params.beginApplyTime} and #{params.endApplyTime}
+            </if>
+        </where>
+        order by r.create_time desc
+    </select>
+
+    <select id="selectServiceOrderRefundById" parameterType="Long" resultMap="ServiceOrderRefundResult">
+        <include refid="selectServiceOrderRefundVo"/>
+        where r.id = #{id}
+    </select>
+
+    <select id="selectLatestRefundByOrderId" parameterType="Long" resultMap="ServiceOrderRefundResult">
+        <include refid="selectServiceOrderRefundVo"/>
+        where r.order_id = #{orderId}
+          and r.del_flag = '0'
+        order by r.create_time desc, r.id desc
+        limit 1
+    </select>
+
+    <insert id="insertServiceOrderRefund" parameterType="ServiceOrderRefund" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_service_order_refund
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="refundNo != null">refund_no,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="refundAmount != null">refund_amount,</if>
+            <if test="refundStatus != null">refund_status,</if>
+            <if test="applicantId != null">applicant_id,</if>
+            <if test="applicantName != null">applicant_name,</if>
+            <if test="applicantType != null">applicant_type,</if>
+            <if test="applyTime != null">apply_time,</if>
+            <if test="refundTime != null">refund_time,</if>
+            <if test="refundReason != null">refund_reason,</if>
+            <if test="refundChannel != null">refund_channel,</if>
+            <if test="refundMethod != null">refund_method,</if>
+            <if test="failCode != null">fail_code,</if>
+            <if test="failReason != null">fail_reason,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="refundNo != null">#{refundNo},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="refundAmount != null">#{refundAmount},</if>
+            <if test="refundStatus != null">#{refundStatus},</if>
+            <if test="applicantId != null">#{applicantId},</if>
+            <if test="applicantName != null">#{applicantName},</if>
+            <if test="applicantType != null">#{applicantType},</if>
+            <if test="applyTime != null">#{applyTime},</if>
+            <if test="refundTime != null">#{refundTime},</if>
+            <if test="refundReason != null">#{refundReason},</if>
+            <if test="refundChannel != null">#{refundChannel},</if>
+            <if test="refundMethod != null">#{refundMethod},</if>
+            <if test="failCode != null">#{failCode},</if>
+            <if test="failReason != null">#{failReason},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateServiceOrderRefund" parameterType="ServiceOrderRefund">
+        update lc_service_order_refund
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="refundNo != null">refund_no = #{refundNo},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="refundAmount != null">refund_amount = #{refundAmount},</if>
+            <if test="refundStatus != null">refund_status = #{refundStatus},</if>
+            <if test="applicantId != null">applicant_id = #{applicantId},</if>
+            <if test="applicantName != null">applicant_name = #{applicantName},</if>
+            <if test="applicantType != null">applicant_type = #{applicantType},</if>
+            <if test="applyTime != null">apply_time = #{applyTime},</if>
+            <if test="refundTime != null">refund_time = #{refundTime},</if>
+            <if test="refundReason != null">refund_reason = #{refundReason},</if>
+            <if test="refundChannel != null">refund_channel = #{refundChannel},</if>
+            <if test="refundMethod != null">refund_method = #{refundMethod},</if>
+            <if test="failCode != null">fail_code = #{failCode},</if>
+            <if test="failReason != null">fail_reason = #{failReason},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteServiceOrderRefundById" parameterType="Long">
+        delete from lc_service_order_refund where id = #{id}
+    </delete>
+
+    <delete id="deleteServiceOrderRefundByIds" parameterType="String">
+        delete from lc_service_order_refund where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

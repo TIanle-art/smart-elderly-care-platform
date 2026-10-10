@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.system.mapper.ElderMapper">
+
+    <resultMap type="com.lcyl.system.domain.Elder" id="ElderResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="image" column="image"/>
+        <result property="idCardNo" column="id_card_no"/>
+        <result property="age" column="age"/>
+        <result property="sex" column="sex"/>
+        <result property="status" column="status"/>
+        <result property="phone" column="phone"/>
+        <result property="bedNumber" column="bed_number"/>
+        <result property="bedId" column="bed_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectElderVo">
+        select
+            id, name, image, id_card_no, age, sex, status, phone,
+            bed_number, bed_id, create_time, update_time, create_by, update_by, remark
+        from elder
+    </sql>
+
+    <select id="selectElderList" parameterType="com.lcyl.system.domain.Elder" resultMap="ElderResult">
+        <include refid="selectElderVo"/>
+        <where>
+            <if test="name != null and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="idCardNo != null and idCardNo != ''"> and id_card_no = #{idCardNo}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="phone != null and phone != ''"> and phone = #{phone}</if>
+            <if test="bedId != null"> and bed_id = #{bedId}</if>
+        </where>
+    </select>
+
+    <select id="selectElderById" parameterType="Long" resultMap="ElderResult">
+        <include refid="selectElderVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectElderByMember" resultType="com.lcyl.system.domain.Elder">
+        select e.id,e.name
+        from elder e
+        left join lc_elder_member em on e.id = em.elder_id
+        left join lc_member m on em.member_id = m.id
+        where m.id = #{memberId}
+    </select>
+    <select id="selectAllElderList" resultMap="ElderResult">
+        select e.id, e.name,e.id_card_no,e.phone,e.status
+        from elder e
+    </select>
+    <select id="selectElderInfo" resultType="java.lang.Long">
+        select em.elder_id
+        from lc_elder_member em
+        where em.member_id = #{memberId}
+    </select>
+    <select id="selectElderBedList" resultType="com.lcyl.system.domain.vo.BedVO">
+        select e.id,e.name,e.image,em.greeting,b.bed_number as bedNumber
+        from elder e
+        left join lc_elder_member em on e.id = em.elder_id
+        left join lc_member m on em.member_id = m.id
+        left join bed b on e.bed_id = b.id
+        where m.id = #{memberId}
+    </select>
+
+    <insert id="insertElder" parameterType="com.lcyl.system.domain.Elder" useGeneratedKeys="true" keyProperty="id">
+        insert into elder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="image != null">image,</if>
+            <if test="idCardNo != null">id_card_no,</if>
+            <if test="age != null">age,</if>
+            <if test="sex != null">sex,</if>
+            <if test="status != null">status,</if>
+            <if test="phone != null">phone,</if>
+            <if test="bedNumber != null">bed_number,</if>
+            <if test="bedId != null">bed_id,</if>
+            <if test="remark != null">remark,</if>
+            create_time, create_by
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="image != null">#{image},</if>
+            <if test="idCardNo != null">#{idCardNo},</if>
+            <if test="age != null">#{age},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="status != null">#{status},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="bedNumber != null">#{bedNumber},</if>
+            <if test="bedId != null">#{bedId},</if>
+            <if test="remark != null">#{remark},</if>
+            now(), #{createBy}
+        </trim>
+    </insert>
+    <insert id="insertInfo">
+        insert into lc_elder_member (elder_id,member_id,greeting) values (#{addInfo.elderId}, #{memberId},#{addInfo.relation})
+    </insert>
+
+    <update id="updateElder" parameterType="com.lcyl.system.domain.Elder">
+        update elder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="idCardNo != null">id_card_no = #{idCardNo},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="bedNumber != null">bed_number = #{bedNumber},</if>
+            <if test="bedId != null">bed_id = #{bedId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = now(),
+            update_by = #{updateBy}
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateBedId">
+        update elder
+        set bed_id = #{bedId}
+        where name = #{name}
+    </update>
+
+    <update id="updateStatus">
+        update elder
+        set status = #{status}
+        where id = #{elderId}
+    </update>
+
+    <delete id="deleteElderById" parameterType="Long">
+        delete from elder where id = #{id}
+    </delete>
+
+    <delete id="deleteElderByIds" parameterType="String">
+        delete from elder where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="delElderInfoById">
+        delete from lc_elder_member where elder_id = #{id}
+    </delete>
+</mapper>

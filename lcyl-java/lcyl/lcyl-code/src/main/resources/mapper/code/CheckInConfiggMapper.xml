@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.CheckInConfiggMapper">
+
+    <resultMap type="checkInConfigg" id="CheckInConfigResult">
+        <result property="id"    column="id"    />
+        <result property="elderId"    column="elder_id"    />
+        <result property="checkInStartTime"    column="check_in_start_time"    />
+        <result property="checkInEndTime"    column="check_in_end_time"    />
+        <result property="nursingLevelId"    column="nursing_level_id"    />
+        <result property="bedNo"    column="bed_no"    />
+        <result property="bedId"    column="bed_id"    />
+        <result property="costStartTime"    column="cost_start_time"    />
+        <result property="costEndTime"    column="cost_end_time"    />
+        <result property="depositAmount"    column="deposit_amount"    />
+        <result property="nursingCost"    column="nursing_cost"    />
+        <result property="bedCost"    column="bed_cost"    />
+        <result property="otherCost"    column="other_cost"    />
+        <result property="medicalInsurancePayment"    column="medical_insurance_payment"    />
+        <result property="governmentSubsidy"    column="government_subsidy"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectCheckInConfigVo">
+        select id, elder_id, check_in_start_time, check_in_end_time, nursing_level_id, bed_no, bed_id, cost_start_time, cost_end_time, deposit_amount, nursing_cost, bed_cost, other_cost, medical_insurance_payment, government_subsidy, create_time, update_time, create_by, update_by, remark
+        from check_in_config
+    </sql>
+
+    <select id="selectCheckInConfigList" parameterType="CheckInConfigg" resultMap="CheckInConfigResult">
+        <include refid="selectCheckInConfigVo"/>
+        <where>
+            <if test="elderId != null "> and elder_id = #{elderId}</if>
+            <if test="checkInStartTime != null "> and check_in_start_time = #{checkInStartTime}</if>
+            <if test="checkInEndTime != null "> and check_in_end_time = #{checkInEndTime}</if>
+            <if test="nursingLevelId != null "> and nursing_level_id = #{nursingLevelId}</if>
+            <if test="bedNo != null  and bedNo != ''"> and bed_no = #{bedNo}</if>
+            <if test="costStartTime != null "> and cost_start_time = #{costStartTime}</if>
+            <if test="costEndTime != null "> and cost_end_time = #{costEndTime}</if>
+            <if test="depositAmount != null "> and deposit_amount = #{depositAmount}</if>
+            <if test="nursingCost != null "> and nursing_cost = #{nursingCost}</if>
+            <if test="bedCost != null "> and bed_cost = #{bedCost}</if>
+            <if test="otherCost != null "> and other_cost = #{otherCost}</if>
+            <if test="medicalInsurancePayment != null "> and medical_insurance_payment = #{medicalInsurancePayment}</if>
+            <if test="governmentSubsidy != null "> and government_subsidy = #{governmentSubsidy}</if>
+        </where>
+    </select>
+
+    <select id="selectCheckInConfigById" parameterType="Long" resultMap="CheckInConfigResult">
+        <include refid="selectCheckInConfigVo"/>
+        where elder_id = #{id}
+    </select>
+    <select id="selectCheckInConfigByElderId" resultType="com.lcyl.code.vo.ConfigVo">
+        SELECT
+            r.type_name AS roomType,
+            -- 1. 天数计算：加NULL兜底 + 非负处理，避免返回负数/NULL
+            IFNULL(DATEDIFF(#{endTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}), 0) AS totalDays,
+            -- 2. 当月总天数：加NULL兜底，避免billMonth为空时报错
+            IFNULL(DAY(LAST_DAY(CONCAT(#{billMonth,jdbcType=VARCHAR}, '-01'))), 0) AS monthTotalDays,
+            -- 3. 金额字段：加NULL兜底，避免后续计算NPE
+            IFNULL(cic.nursing_cost, 0.0) AS nursingCost,
+            IFNULL(cic.bed_cost, 0.0) AS bedCost,
+            IFNULL(cic.other_cost, 0.0) AS otherCost,
+            IFNULL(cic.medical_insurance_payment, 0.0) AS medicalPayment,
+            IFNULL(cic.government_subsidy, 0.0) AS governmentSubsidy,
+            nl.name AS nursingLevel
+        FROM check_in_config cic
+                 LEFT JOIN bed b ON cic.bed_id = b.id
+                 LEFT JOIN room r ON b.room_id = r.id
+                 LEFT JOIN nursing_level nl ON cic.nursing_level_id = nl.id
+        -- 4. 老人ID：强制指定类型，避免参数类型不匹配
+        WHERE cic.elder_id = #{elderId,jdbcType=INTEGER}
+    </select>
+    <select id="selectCheckInConfig" resultType="com.lcyl.code.vo.ConfigVo">
+        SELECT
+            r.type_name AS roomType,
+            DAY(LAST_DAY(CONCAT(#{billMonth,jdbcType=VARCHAR}, '-01'))) AS monthTotalDays,
+            cic.nursing_cost AS nursingCost,
+            cic.bed_cost AS bedCost,
+            cic.other_cost AS otherCost,
+            cic.deposit_amount AS depositAmount,
+            cic.medical_insurance_payment AS medicalPayment,
+            cic.government_subsidy AS governmentSubsidy,
+            nl.name AS nursingLevel
+        FROM check_in_config cic
+            LEFT JOIN bed b ON cic.bed_id = b.id
+            LEFT JOIN room r ON b.room_id = r.id
+            LEFT JOIN nursing_level nl ON cic.nursing_level_id = nl.id
+        WHERE cic.elder_id = #{elderId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectById" resultType="com.lcyl.code.domain.CheckInConfigg">
+        select * from check_in_config
+        where elder_id = #{elderId}
+    </select>
+
+    <insert id="insertCheckInConfig" parameterType="CheckInConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into check_in_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="elderId != null">elder_id,</if>
+            <if test="checkInStartTime != null">check_in_start_time,</if>
+            <if test="checkInEndTime != null">check_in_end_time,</if>
+            <if test="nursingLevelId != null">nursing_level_id,</if>
+            <if test="bedNo != null and bedNo != ''">bed_no,</if>
+            <if test="bedId != null">bed_id,</if>
+            <if test="costStartTime != null">cost_start_time,</if>
+            <if test="costEndTime != null">cost_end_time,</if>
+            <if test="depositAmount != null">deposit_amount,</if>
+            <if test="nursingCost != null">nursing_cost,</if>
+            <if test="bedCost != null">bed_cost,</if>
+            <if test="otherCost != null">other_cost,</if>
+            <if test="medicalInsurancePayment != null">medical_insurance_payment,</if>
+            <if test="governmentSubsidy != null">government_subsidy,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elderId != null">#{elderId},</if>
+            <if test="checkInStartTime != null">#{checkInStartTime},</if>
+            <if test="checkInEndTime != null">#{checkInEndTime},</if>
+            <if test="nursingLevelId != null">#{nursingLevelId},</if>
+            <if test="bedNo != null and bedNo != ''">#{bedNo},</if>
+            <if test="bedId != null">#{bedId},</if>
+            <if test="costStartTime != null">#{costStartTime},</if>
+            <if test="costEndTime != null">#{costEndTime},</if>
+            <if test="depositAmount != null">#{depositAmount},</if>
+            <if test="nursingCost != null">#{nursingCost},</if>
+            <if test="bedCost != null">#{bedCost},</if>
+            <if test="otherCost != null">#{otherCost},</if>
+            <if test="medicalInsurancePayment != null">#{medicalInsurancePayment},</if>
+            <if test="governmentSubsidy != null">#{governmentSubsidy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCheckInConfig" parameterType="CheckInConfigg">
+        update check_in_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="checkInStartTime != null">check_in_start_time = #{checkInStartTime},</if>
+            <if test="checkInEndTime != null">check_in_end_time = #{checkInEndTime},</if>
+            <if test="nursingLevelId != null">nursing_level_id = #{nursingLevelId},</if>
+            <if test="bedNo != null and bedNo != ''">bed_no = #{bedNo},</if>
+            <if test="bedId != null">bed_id = #{bedId},</if>
+            <if test="costStartTime != null">cost_start_time = #{costStartTime},</if>
+            <if test="costEndTime != null">cost_end_time = #{costEndTime},</if>
+            <if test="depositAmount != null">deposit_amount = #{depositAmount},</if>
+            <if test="nursingCost != null">nursing_cost = #{nursingCost},</if>
+            <if test="bedCost != null">bed_cost = #{bedCost},</if>
+            <if test="otherCost != null">other_cost = #{otherCost},</if>
+            <if test="medicalInsurancePayment != null">medical_insurance_payment = #{medicalInsurancePayment},</if>
+            <if test="governmentSubsidy != null">government_subsidy = #{governmentSubsidy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateCheckInConfigRetreat">
+    <!-- 更新入住配置状态 -->
+        update check_in_config
+        set status = #{status},
+            update_time = now()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCheckInConfigById" parameterType="Long">
+        delete from check_in_config where id = #{id}
+    </delete>
+
+    <delete id="deleteCheckInConfigByIds" parameterType="String">
+        delete from check_in_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="delByElderId">
+        delete from check_in_config
+        where elder_id = #{elderId}
+    </delete>
+</mapper>

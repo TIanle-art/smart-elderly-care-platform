@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.ArrivalMapper">
+    
+    <resultMap type="Arrival" id="ArrivalResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="elderName"    column="elder_name"    />
+        <result property="visitTime"    column="visit_time"    />
+        <result property="createPerson"    column="create_person"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectArrivalVo">
+        select id, type, name, phone, elder_name, visit_time, create_person, create_time from lc_arrival
+    </sql>
+
+    <select id="selectArrivalList" parameterType="Arrival" resultMap="ArrivalResult">
+        <include refid="selectArrivalVo"/>
+        <where>  
+            <if test="type != null "> and type = #{type}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="elderName != null  and elderName != ''"> and elder_name like concat('%', #{elderName}, '%')</if>
+            <if test="visitTime != null "> and visit_time = #{visitTime}</if>
+            <if test="createPerson != null  and createPerson != ''"> and create_person = #{createPerson}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectArrivalById" parameterType="Long" resultMap="ArrivalResult">
+        <include refid="selectArrivalVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertArrival" parameterType="Arrival">
+        insert into lc_arrival
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+<!--            <if test="id != null">id,</if>-->
+            <if test="type != null">type,</if>
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="elderName != null">elder_name,</if>
+            <if test="visitTime != null">visit_time,</if>
+            <if test="createPerson != null">create_person,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+<!--            <if test="id != null">#{id},</if>-->
+            <if test="type != null">#{type},</if>
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="elderName != null">#{elderName},</if>
+            <if test="visitTime != null">#{visitTime},</if>
+            <if test="createPerson != null">#{createPerson},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateArrival" parameterType="Arrival">
+        update lc_arrival
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type = #{type},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="elderName != null">elder_name = #{elderName},</if>
+            <if test="visitTime != null">visit_time = #{visitTime},</if>
+            <if test="createPerson != null">create_person = #{createPerson},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteArrivalById" parameterType="Long">
+        delete from lc_arrival where id = #{id}
+    </delete>
+
+    <delete id="deleteArrivalByIds" parameterType="String">
+        delete from lc_arrival where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectArrivalByType" parameterType="Arrival" resultMap="ArrivalResult">
+        <include refid="selectArrivalVo"/>    where type = #{id}
+    </select>
+
+    <select id="selectOlderList" resultType="com.lcyl.code.domain.vo.ElderListVo">
+        select id,name from elder
+    </select>
+</mapper>

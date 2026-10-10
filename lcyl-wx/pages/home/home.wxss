@@ -1,0 +1,182 @@
+/* 背景颜色 */
+.contain{
+  background-color: #f2f2f2;
+}
+/* 图片区域的容器 */
+.banner{
+  margin: 20rpx 20rpx 40rpx 20rpx;
+}
+
+/* 父容器：横向布局，垂直居中对齐 */
+.in_ask {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: flex-start;
+  padding: 10rpx 20rpx;
+  background-color: white;
+  border-radius: 20rpx;
+  height: 120rpx;
+  margin-left: 20rpx;
+  margin-right: 20rpx;
+}
+
+/* 图片容器：固定宽度 */
+.pic_contain {
+  margin-right: 40rpx; /* 图片和文字之间的间距 */
+}
+
+/* 图片大小，可自行修改 */
+.ask_pic {
+  width: 80rpx;
+  height: 80rpx;
+  display: block;
+}
+
+/* 右侧文字区域：自动占满剩余空间，文字上下排列 */
+.in_ask view:nth-child(2) {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* 关键：让文字上下排布 */
+  justify-content: center;
+}
+
+/* 文字样式（可自行调整） */
+.in_ask text {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.4;
+}
+
+.in_ask view:nth-child(2) view:last-child text {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 6rpx;
+}
+
+/* 外层容器：两个模块横向并排 */
+.reserve {
+  display: flex;
+  gap: 20rpx; /* 两个模块之间的间距 */
+  padding: 20rpx;
+}
+
+/* 单个模块：文字左 + 图片右 */
+.reserve-item {
+  flex: 1; /* 平分宽度 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx 24rpx;
+}
+
+/* 文字区域：上下排列 */
+.reserve-left {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 标题文字 */
+.title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+/* 描述文字 */
+.desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 图片大小 */
+.icon {
+  width: 100rpx;
+  height: 100rpx;
+}
+
+/* 选择操作 */
+/* 父容器：4个子项 横向一排 */
+.select {
+  display: flex;
+  justify-content: space-around; /* 均匀分布 */
+  align-items: center;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 40rpx;
+  margin-left: 20rpx;
+  margin-right: 20rpx;
+}
+
+/* 每个子项：图片在上、文字在下 */
+.work {
+  display: flex;
+  flex-direction: column; /* 上下结构 */
+  align-items: center;    /* 居中 */
+}
+
+/* 图片大小 */
+.work image {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 12rpx; /* 图片和文字间距 */
+}
+
+/* 文字样式 */
+.work text {
+  font-size: 24rpx;
+  color: #333;
+}
+
+/* ====================== 🔥 已美化：热门房型 ====================== */
+.home_contain{
+  margin: 30rpx 20rpx 0 20rpx;
+}
+.home_contain > text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin-bottom: 20rpx;
+  display: block;
+}
+/* 卡片列表 */
+.item {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: 30rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+/* 图片 */
+.item_img {
+  width: 100%;
+  height: 320rpx;
+  object-fit: cover;
+}
+/* 标题 */
+.item_title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #222;
+  padding: 20rpx 24rpx 0;
+}
+/* 描述 */
+.item_desc {
+  font-size: 24rpx;
+  color: #888;
+  padding: 8rpx 24rpx 24rpx;
+  line-height: 1.4;
+}
+
+.custom-service-btn {
+  background-color: white;
+  color: black;
+  border-radius: 8rpx;
+  padding: 20rpx;
+}

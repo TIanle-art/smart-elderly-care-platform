@@ -1,0 +1,67 @@
+<view class="page">
+  <view class="status-tabs">
+    <view
+      wx:for="{{statusTabs}}"
+      wx:key="key"
+      class="status-tab-item {{activeStatus === item.key ? 'active' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="switchStatusTab"
+    >
+      {{item.label}}
+    </view>
+  </view>
+
+  <scroll-view class="elder-tabs-wrapper" scroll-x enable-flex>
+    <view class="elder-tabs">
+      <view
+        wx:for="{{elderTabs}}"
+        wx:key="key"
+        class="elder-tab-item {{activeElder === item.key ? 'active' : ''}}"
+        data-key="{{item.key}}"
+        bindtap="switchElderTab"
+      >
+        {{item.label}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="bill-list">
+    <view wx:if="{{loading}}" class="empty-wrap">
+      <text class="empty-text">加载中...</text>
+    </view>
+
+    <block wx:elif="{{filteredBills.length > 0}}">
+      <view class="bill-card" wx:for="{{filteredBills}}" wx:key="id">
+        <view class="bill-card-top">
+          <text class="order-no">{{item.orderNo}}</text>
+          <text class="status-text {{item.status}}">{{item.statusText}}</text>
+        </view>
+
+        <view class="bill-main">
+          <view class="bill-main-left">
+            <view class="bill-title">{{item.title}}</view>
+            <view class="bill-info">老人姓名: {{item.elderName}}</view>
+            <view class="bill-info">创建时间: {{item.createTime}}</view>
+            <view class="bill-info">支付截止时间: {{item.deadlineTime}}</view>
+          </view>
+
+          <view class="bill-main-right">
+            <view class="bill-amount">¥{{item.amount}}</view>
+            <view class="bill-month">账单月份: {{item.billMonth}}</view>
+          </view>
+        </view>
+
+        <view class="bill-divider"></view>
+
+        <view class="bill-actions">
+          <view class="btn detail-btn" data-id="{{item.id}}" bindtap="handleViewDetail">查看详情</view>
+          <view wx:if="{{item.status === 'pending'}}" class="btn pay-btn" data-id="{{item.id}}" bindtap="handlePay">去支付</view>
+        </view>
+      </view>
+    </block>
+
+    <view wx:else class="empty-wrap">
+      <text class="empty-text">暂无账单数据</text>
+    </view>
+  </view>
+</view>

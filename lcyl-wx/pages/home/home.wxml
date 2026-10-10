@@ -1,0 +1,81 @@
+<view class="contain">
+  <view class="banner">
+    <image src="/images/pic-01.png" style="width: 100%;"></image>
+  </view>
+
+  <view class="in_ask">
+    <view class="pic_contain">
+      <image class="ask_pic" src="/images/pic-tp.png" />
+    </view>
+
+    <view>
+      <view><text>入住咨询</text></view>
+      <view><text>贴心服务 欢迎咨询</text></view>
+    </view>
+    <button size="mini" open-type="contact" class="custom-service-btn">
+  联系客服
+</button>
+<!-- 4e39a465f91d3527a22ab594751c4802 -->
+  </view>
+
+  <view class="reserve">
+    <navigator class="reserve-item" url="/home/pages/eldervisit/eldervisit">
+      <view class="reserve-left">
+        <text class="title">探访预约</text>
+        <text class="desc">老人家属预约拜访</text>
+      </view>
+      <view class="reserve-right">
+        <image src="/images/icon-tfyy.png" class="icon" />
+      </view>
+    </navigator>
+
+    <navigator class="reserve-item" url="/home/pages/customVisit/customVisit">
+      <view class="reserve-left">
+        <text class="title">参观预约</text>
+        <text class="desc">预约参观养老院</text>
+      </view>
+      <view class="reserve-right">
+        <image src="/images/icon-cgyy.png" class="icon" />
+      </view>
+    </navigator>
+  </view>
+
+  <view class="select">
+    <navigator class="work" url="/home/pages/aboutInfo/aboutInfo">
+      <image src="/images/icon-yly.png" />
+      <text>养老院介绍</text>
+    </navigator>
+
+    <navigator class="work" url="/family/pages/addfamily/addfamily">
+      <image src="/images/icon-bdjr.png" />
+      <text>绑定老人</text>
+    </navigator>
+
+    <navigator class="work" url="/home/pages/myService/myService">
+      <image src="/images/icon-wdfw.png" />
+      <text>我的服务</text>
+    </navigator>
+
+    <navigator class="work" url="/my/pages/myBill/myBill">
+      <image src="/images/icon-wdzd.png" />
+      <text>我的账单</text>
+    </navigator>
+  </view>
+
+  <view class="home_contain">
+    <text>热门房型</text>
+    
+    <!-- ✅ 样式100%不变 图片大小不变 只加点击跳转 -->
+    <view 
+      wx:for="{{list}}" 
+      wx:key="id" 
+      class="item"
+      bindtap="goRoomDetail"
+      data-id="{{item.id}}"
+    >
+      <image src="{{item.photo}}" class="item_img"></image>
+      <text class="item_title">{{ item.name }}</text>
+      <text class="item_desc">{{ item.introduction }}</text>
+    </view>
+  </view>
+</view>

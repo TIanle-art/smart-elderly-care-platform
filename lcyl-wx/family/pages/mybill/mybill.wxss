@@ -1,0 +1,144 @@
+page {
+  background: #f5f5f5;
+}
+
+/* 标签栏 */
+.tab-bar {
+  display: flex;
+  background: #fff;
+}
+.tab-item {
+  flex: 1;
+  text-align: center;
+  line-height: 80rpx;
+  font-size: 30rpx;
+  color: #666;
+  position: relative;
+}
+.tab-item.active {
+  color: #007aff;
+  font-weight: bold;
+}
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 6rpx;
+  background: #007aff;
+  border-radius: 3rpx;
+}
+
+/* 列表容器 */
+.bill-list {
+  padding: 20rpx;
+}
+.bill-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.bill-no {
+  font-size: 28rpx;
+  color: #666;
+}
+/* 状态标签 完美居中 */
+.status-tag {
+  font-size: 26rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+.status-tag.pending {
+  color: #ff4d4f;
+}
+.status-tag.paid {
+  color: #52c41a;
+}
+
+/* 卡片标题 */
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.title-text {
+  font-size: 48rpx;
+  font-weight: bold;
+}
+.total-amount {
+  font-size: 48rpx;
+  color: #ff9500;
+  font-weight: bold;
+}
+
+/* 详情信息 */
+.card-info {
+  font-size: 30rpx;
+  color: #666;
+  margin-bottom: 30rpx;
+}
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+/* 底部 */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.amount-row {
+  display: flex;
+  align-items: center;
+}
+.pay-amount {
+  font-size: 40rpx;
+  color: #ff9500;
+  font-weight: bold;
+  margin-left: 10rpx;
+}
+.btn-group {
+  display: flex;
+  gap: 20rpx;
+}
+.btn {
+  font-size: 28rpx;
+  padding: 12rpx 30rpx;
+  border-radius: 20rpx;
+  border: none;
+  margin: 0;
+}
+.detail-btn {
+  background: #f0f0f0;
+  color: #333;
+}
+.pay-btn {
+  background: #007aff;
+  color: #fff;
+}
+
+.empty-tip {
+  text-align: center;
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 100rpx;
+}

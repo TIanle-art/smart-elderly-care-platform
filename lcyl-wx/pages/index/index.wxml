@@ -1,0 +1,13 @@
+<view class="page-container">
+  <!-- 背景图片 -->
+  <image class="bg-image" src="/images/1.jpg" mode="aspectFill"></image>
+  
+  <!-- 内容区域 -->
+  <view class="content">
+    <view class="log_btn">
+      <button  open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">
+        微信一键登录
+      </button>
+    </view>
+  </view>
+</view>

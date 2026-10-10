@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcCheckinApproveInitiatorMapper">
+    
+    <resultMap type="LcCheckinApproveInitiator" id="LcCheckinApproveInitiatorResult">
+        <result property="id"    column="id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="initiatorId"    column="initiator_id"    />
+        <result property="initiatorName"    column="initiator_name"    />
+        <result property="initiateTime"    column="initiate_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectLcCheckinApproveInitiatorVo">
+        select id, apply_id, initiator_id, initiator_name, initiate_time, del_flag from lc_checkin_approve_initiator
+    </sql>
+
+    <select id="selectLcCheckinApproveInitiatorList" parameterType="LcCheckinApproveInitiator" resultMap="LcCheckinApproveInitiatorResult">
+        <include refid="selectLcCheckinApproveInitiatorVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="initiatorId != null "> and initiator_id = #{initiatorId}</if>
+            <if test="initiatorName != null  and initiatorName != ''"> and initiator_name like concat('%', #{initiatorName}, '%')</if>
+            <if test="initiateTime != null "> and initiate_time = #{initiateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLcCheckinApproveInitiatorById" parameterType="Long" resultMap="LcCheckinApproveInitiatorResult">
+        <include refid="selectLcCheckinApproveInitiatorVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcCheckinApproveInitiator" parameterType="LcCheckinApproveInitiator" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_checkin_approve_initiator
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">apply_id,</if>
+            <if test="initiatorId != null">initiator_id,</if>
+            <if test="initiatorName != null">initiator_name,</if>
+            <if test="initiateTime != null">initiate_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">#{applyId},</if>
+            <if test="initiatorId != null">#{initiatorId},</if>
+            <if test="initiatorName != null">#{initiatorName},</if>
+            <if test="initiateTime != null">#{initiateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcCheckinApproveInitiator" parameterType="LcCheckinApproveInitiator">
+        update lc_checkin_approve_initiator
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null">apply_id = #{applyId},</if>
+            <if test="initiatorId != null">initiator_id = #{initiatorId},</if>
+            <if test="initiatorName != null">initiator_name = #{initiatorName},</if>
+            <if test="initiateTime != null">initiate_time = #{initiateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcCheckinApproveInitiatorById" parameterType="Long">
+        delete from lc_checkin_approve_initiator where id = #{id}
+    </delete>
+
+    <delete id="deleteLcCheckinApproveInitiatorByIds" parameterType="String">
+        delete from lc_checkin_approve_initiator where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

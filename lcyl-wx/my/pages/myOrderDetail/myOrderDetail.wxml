@@ -1,0 +1,102 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <view wx:elif="{{orderInfo}}" class="content">
+    <view class="state-banner">
+      <view class="state-title">{{uiState.bannerTitle}}</view>
+      <view wx:if="{{uiState.bannerDesc}}" class="state-desc">{{uiState.bannerDesc}}</view>
+    </view>
+
+    <view class="section-card goods-card">
+      <view class="goods-main">
+        <image class="goods-image" src="{{projectImage}}" mode="aspectFill" data-url="{{projectImage}}" bindtap="previewImage" />
+        <view class="goods-info">
+          <view class="goods-name">{{orderInfo.projectName}}</view>
+          <view class="goods-price">¥{{orderView.amountText}}</view>
+        </view>
+      </view>
+      <view class="goods-total">
+        <text class="goods-total-label">实付款</text>
+        <text class="goods-total-value">¥{{orderView.amountText}}</text>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="cell">
+        <text class="cell-label">期望服务时间</text>
+        <text class="cell-value">{{orderView.expectedServiceTimeText}}</text>
+      </view>
+      <view class="cell">
+        <text class="cell-label">下单人</text>
+        <text class="cell-value">{{orderInfo.applicantName || '-'}}</text>
+      </view>
+      <view class="cell cell-top">
+        <text class="cell-label">备注</text>
+        <text class="cell-value multiline">{{orderInfo.remark || '-'}}</text>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="cell">
+        <text class="cell-label">订单编号</text>
+        <text class="cell-value">{{orderInfo.orderNo}}</text>
+      </view>
+      <view class="cell">
+        <text class="cell-label">下单时间</text>
+        <text class="cell-value">{{orderView.createTimeText}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{uiState.showRefundCard && refundInfo}}" class="section-card">
+      <view class="cell">
+        <text class="cell-label">退款原因</text>
+        <text class="cell-value">{{refundInfo.refundReason || '-'}}</text>
+      </view>
+      <view class="cell">
+        <text class="cell-label">申请时间</text>
+        <text class="cell-value">{{orderView.refundApplyTimeText}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{uiState.showExecutionCard && executionInfo}}" class="section-card">
+      <view class="cell">
+        <text class="cell-label">执行人</text>
+        <text class="cell-value">{{executionInfo.executorName || '-'}}</text>
+      </view>
+      <view class="cell">
+        <text class="cell-label">执行时间</text>
+        <text class="cell-value">{{orderView.executeTimeText}}</text>
+      </view>
+      <view class="cell cell-top">
+        <text class="cell-label">执行记录</text>
+        <text class="cell-value multiline">{{executionInfo.executeRecord || '暂无执行说明'}}</text>
+      </view>
+      <view class="cell cell-top">
+        <text class="cell-label">执行图片</text>
+        <view class="cell-value image-box">
+          <image
+            wx:if="{{executionInfo.executeImage}}"
+            class="record-image"
+            src="{{executionInfo.executeImage}}"
+            mode="aspectFill"
+            data-url="{{executionInfo.executeImage}}"
+            bindtap="previewImage"
+          />
+          <text wx:else class="placeholder-text">暂无图片</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="loading-wrap">
+    <text class="loading-text">暂无订单详情</text>
+  </view>
+
+  <view wx:if="{{orderInfo && (uiState.showCancelButton || uiState.showPayButton || uiState.showRefundButton)}}" class="bottom-bar">
+    <button wx:if="{{uiState.showCancelButton}}" class="bottom-btn bottom-btn-default" bindtap="handleCancelOrder">取消订单</button>
+    <button wx:if="{{uiState.showPayButton}}" class="bottom-btn bottom-btn-primary" bindtap="handlePayOrder">去支付</button>
+    <button wx:if="{{uiState.showRefundButton}}" class="bottom-btn bottom-btn-default" bindtap="handleRefund">退款</button>
+  </view>
+</view>

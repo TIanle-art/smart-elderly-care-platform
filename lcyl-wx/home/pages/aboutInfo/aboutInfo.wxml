@@ -1,0 +1,148 @@
+<!-- home/pages/aboutInfo/aboutInfo.wxml -->
+<view class="page">
+  <!-- 自定义导航栏 -->
+  <view class="custom-nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px;">
+      <view class="nav-left" bindtap="goBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">养老院介绍</view>
+      <view class="nav-right-placeholder"></view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="page-scroll">
+    <view class="nav-placeholder" style="height: {{statusBarHeight + navBarHeight}}px;"></view>
+    <!-- 地图区域 -->
+    <view class="map-wrap">
+      <image class="map-image" src="/images/map1.png" mode="aspectFill"></image>
+    </view>
+
+    <!-- 主卡片 -->
+    <view class="info-card">
+      <view class="header-block">
+        <text class="institution-name">绿城养老</text>
+        <text class="institution-address">河南省郑州市高新技术产业开发区莲花街11号1号楼1-2层</text>
+      </view>
+
+      <view class="divider"></view>
+
+      <!-- 信息列表 -->
+      <view class="info-list">
+        <view class="info-row">
+          <view class="info-label-wrap">
+            <text class="info-icon">🏢</text>
+            <text class="info-label">机构类别：</text>
+          </view>
+          <view class="info-value-wrap">
+            <text class="info-value">护理型养老机构</text>
+          </view>
+        </view>
+
+        <view class="info-row">
+          <view class="info-label-wrap">
+            <text class="info-icon">㎡</text>
+            <text class="info-label">占地面积：</text>
+          </view>
+          <view class="info-value-wrap">
+            <text class="info-value">50,000平方米</text>
+          </view>
+        </view>
+
+        <view class="info-row info-row-top">
+          <view class="info-label-wrap">
+            <text class="info-icon">👥</text>
+            <text class="info-label">收住老人：</text>
+          </view>
+          <view class="info-value-wrap">
+            <text class="info-value">特困人员、优抚、残疾、部分失能、完全失能、能力完好、其他</text>
+          </view>
+        </view>
+
+        <view class="info-row">
+          <view class="info-label-wrap">
+            <text class="info-icon">🛏</text>
+            <text class="info-label">床位总数：</text>
+          </view>
+          <view class="info-value-wrap">
+            <text class="info-value">500张</text>
+          </view>
+        </view>
+
+        <view class="info-row">
+          <view class="info-label-wrap">
+            <text class="info-icon">🕘</text>
+            <text class="info-label">营业时间：</text>
+          </view>
+          <view class="info-value-wrap">
+            <text class="info-value">08:00-18:00</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 机构介绍 -->
+      <view class="section">
+        <view class="section-title-row">
+          <view class="section-line"></view>
+          <text class="section-title">机构介绍</text>
+        </view>
+
+        <text class="section-desc">
+          中州养老院是一家致力于为老年人提供高质量养老服务的专业机构。拥有多年的行业经验和深厚的服务实力，始终秉持“以人为本、关爱生命”的核心理念，为老年人提供优质、温暖、专业的养老服务。
+        </text>
+
+        <text class="section-desc">
+          机构环境舒适，房间宽敞明亮，配套设施完善，工作人员经过专业培训，能够为老人提供更贴心、更周到的照护服务。
+        </text>
+      </view>
+
+      <!-- 环境展示 -->
+      <view class="section">
+        <view class="section-title-row">
+          <view class="section-line"></view>
+          <text class="section-title">环境展示</text>
+        </view>
+
+        <view class="gallery-list">
+          <block wx:for="{{imageList}}" wx:key="index">
+            <image class="gallery-image" src="{{item}}" mode="aspectFill" data-current="{{item}}"
+              bindtap="openImageViewer" />
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-safe-space"></view>
+  </scroll-view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <button class="call-btn" bindtap="showPhonePopup">致电咨询</button>
+  </view>
+
+  <!-- 图片预览弹层 -->
+  <view class="viewer-mask" wx:if="{{showViewer}}" bindtap="closeImageViewer">
+    <view class="viewer-box" catchtap="stopPropagation">
+      <text class="viewer-count">{{currentImageIndex + 1}} / {{imageList.length}}</text>
+      <image class="viewer-image" src="{{currentImage}}" mode="aspectFit"></image>
+      <view class="viewer-close" bindtap="closeImageViewer">×</view>
+    </view>
+  </view>
+
+  <!-- 电话弹窗：页面中央 -->
+  <view class="popup-mask" wx:if="{{showPhoneModal}}" bindtap="hidePhonePopup">
+    <view class="phone-popup center-popup" catchtap="stopPropagation">
+      <view class="popup-content">
+        <text class="popup-tip">
+          很高兴得到您的认可，咨询更多详细内容，请拨打电话
+        </text>
+        <text class="popup-phone">{{phoneNumber}}</text>
+      </view>
+
+      <view class="popup-actions">
+        <view class="popup-btn cancel-btn" bindtap="hidePhonePopup">取消</view>
+        <view class="popup-btn confirm-btn" bindtap="makePhoneCall">呼叫</view>
+      </view>
+    </view>
+  </view>
+</view>

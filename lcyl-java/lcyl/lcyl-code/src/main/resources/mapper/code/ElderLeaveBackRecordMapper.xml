@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.ElderLeaveBackRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.lcyl.code.domain.ElderLeaveBackRecord">
+            <id property="id" column="id" />
+            <result property="leaveId" column="leave_id" />
+            <result property="actualReturnTime" column="actual_return_time" />
+            <result property="actualLeaveDays" column="actual_leave_days" />
+            <result property="backStatus" column="back_status" />
+            <result property="backRemark" column="back_remark" />
+            <result property="operatorId" column="operator_id" />
+            <result property="operatorName" column="operator_name" />
+            <result property="operateTime" column="operate_time" />
+            <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,leave_id,actual_return_time,actual_leave_days,back_status,back_remark,
+        operator_id,operator_name,operate_time,create_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from lc_elder_leave_back_record
+        where  id = #{id} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from lc_elder_leave_back_record
+        where  id = #{id} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.lcyl.code.domain.ElderLeaveBackRecord" useGeneratedKeys="true">
+        insert into lc_elder_leave_back_record
+        ( id,leave_id,actual_return_time,actual_leave_days,back_status,back_remark,
+        operator_id,operator_name,operate_time,create_time)
+        values (#{id},#{leaveId},#{actualReturnTime},#{actualLeaveDays},#{backStatus},#{backRemark},
+        #{operatorId},#{operatorName},#{operateTime},#{createTime})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.lcyl.code.domain.ElderLeaveBackRecord" useGeneratedKeys="true">
+        insert into lc_elder_leave_back_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="leaveId != null">leave_id,</if>
+                <if test="actualReturnTime != null">actual_return_time,</if>
+                <if test="actualLeaveDays != null">actual_leave_days,</if>
+                <if test="backStatus != null">back_status,</if>
+                <if test="backRemark != null">back_remark,</if>
+                <if test="operatorId != null">operator_id,</if>
+                <if test="operatorName != null">operator_name,</if>
+                <if test="operateTime != null">operate_time,</if>
+                <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="leaveId != null">#{leaveId},</if>
+                <if test="actualReturnTime != null">#{actualReturnTime},</if>
+                <if test="actualLeaveDays != null">#{actualLeaveDays},</if>
+                <if test="backStatus != null">#{backStatus},</if>
+                <if test="backRemark != null">#{backRemark},</if>
+                <if test="operatorId != null">#{operatorId},</if>
+                <if test="operatorName != null">#{operatorName},</if>
+                <if test="operateTime != null">#{operateTime},</if>
+                <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.lcyl.code.domain.ElderLeaveBackRecord">
+        update lc_elder_leave_back_record
+        <set>
+                <if test="leaveId != null">
+                    leave_id = #{leaveId},
+                </if>
+                <if test="actualReturnTime != null">
+                    actual_return_time = #{actualReturnTime},
+                </if>
+                <if test="actualLeaveDays != null">
+                    actual_leave_days = #{actualLeaveDays},
+                </if>
+                <if test="backStatus != null">
+                    back_status = #{backStatus},
+                </if>
+                <if test="backRemark != null">
+                    back_remark = #{backRemark},
+                </if>
+                <if test="operatorId != null">
+                    operator_id = #{operatorId},
+                </if>
+                <if test="operatorName != null">
+                    operator_name = #{operatorName},
+                </if>
+                <if test="operateTime != null">
+                    operate_time = #{operateTime},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime},
+                </if>
+        </set>
+        where   id = #{id} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.lcyl.code.domain.ElderLeaveBackRecord">
+        update lc_elder_leave_back_record
+        set 
+            leave_id =  #{leaveId},
+            actual_return_time =  #{actualReturnTime},
+            actual_leave_days =  #{actualLeaveDays},
+            back_status =  #{backStatus},
+            back_remark =  #{backRemark},
+            operator_id =  #{operatorId},
+            operator_name =  #{operatorName},
+            operate_time =  #{operateTime},
+            create_time =  #{createTime}
+        where   id = #{id} 
+    </update>
+</mapper>

@@ -1,0 +1,15 @@
+<view class="success-page">
+  <view class="success-content">
+    <image class="success-img" src="/images/success.png"></image>
+    <text class="success-title">下单成功</text>
+    <!-- 👇 优化：当 serviceTime 不存在时，显示默认文案 -->
+    <text class="success-desc">
+      {{serviceTime ? '预计' + serviceTime + '服务' : '服务将尽快为您安排'}}，请耐心等待~~
+    </text>
+    
+    <view class="btn-group">
+      <button class="btn-outline" bindtap="backToHome">返回首页</button>
+      <button class="btn-solid" bindtap="viewOrder">查看订单</button>
+    </view>
+  </view>
+</view>

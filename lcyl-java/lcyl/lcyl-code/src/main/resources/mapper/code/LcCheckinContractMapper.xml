@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcCheckinContractMapper">
+    
+    <resultMap type="LcCheckinContract" id="LcCheckinContractResult">
+        <result property="id"    column="id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="contractPath"    column="contract_path"    />
+        <result property="signTime"    column="sign_time"    />
+        <result property="signPerson"    column="sign_person"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="checkinTime"    column="checkin_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectLcCheckinContractVo">
+        select id, apply_id, contract_no, contract_path, sign_time, sign_person, pay_status, checkin_time, del_flag, create_by, create_time from lc_checkin_contract
+    </sql>
+
+    <select id="selectLcCheckinContractList" parameterType="LcCheckinContract" resultMap="LcCheckinContractResult">
+        <include refid="selectLcCheckinContractVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="contractNo != null  and contractNo != ''"> and contract_no = #{contractNo}</if>
+            <if test="contractPath != null  and contractPath != ''"> and contract_path = #{contractPath}</if>
+            <if test="signTime != null "> and sign_time = #{signTime}</if>
+            <if test="signPerson != null  and signPerson != ''"> and sign_person = #{signPerson}</if>
+            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
+            <if test="checkinTime != null "> and checkin_time = #{checkinTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLcCheckinContractById" parameterType="Long" resultMap="LcCheckinContractResult">
+        <include refid="selectLcCheckinContractVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcCheckinContract" parameterType="LcCheckinContract" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_checkin_contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">apply_id,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="contractPath != null">contract_path,</if>
+            <if test="signTime != null">sign_time,</if>
+            <if test="signPerson != null">sign_person,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="checkinTime != null">checkin_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">#{applyId},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="contractPath != null">#{contractPath},</if>
+            <if test="signTime != null">#{signTime},</if>
+            <if test="signPerson != null">#{signPerson},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="checkinTime != null">#{checkinTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcCheckinContract" parameterType="LcCheckinContract">
+        update lc_checkin_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null">apply_id = #{applyId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractPath != null">contract_path = #{contractPath},</if>
+            <if test="signTime != null">sign_time = #{signTime},</if>
+            <if test="signPerson != null">sign_person = #{signPerson},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="checkinTime != null">checkin_time = #{checkinTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcCheckinContractById" parameterType="Long">
+        delete from lc_checkin_contract where id = #{id}
+    </delete>
+
+    <delete id="deleteLcCheckinContractByIds" parameterType="String">
+        delete from lc_checkin_contract where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

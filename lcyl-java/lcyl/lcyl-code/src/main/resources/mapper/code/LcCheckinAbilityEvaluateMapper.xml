@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcCheckinAbilityEvaluateMapper">
+    
+    <resultMap type="LcCheckinAbilityEvaluate" id="LcCheckinAbilityEvaluateResult">
+        <result property="id"    column="id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="selfCareScore"    column="self_care_score"    />
+        <result property="mentalStatus"    column="mental_status"    />
+        <result property="mobility"    column="mobility"    />
+        <result property="careLevel"    column="care_level"    />
+        <result property="evaluateDoctor"    column="evaluate_doctor"    />
+        <result property="evaluateTime"    column="evaluate_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectLcCheckinAbilityEvaluateVo">
+        select id, apply_id, self_care_score, mental_status, mobility, care_level, evaluate_doctor, evaluate_time, del_flag, create_by, create_time from lc_checkin_ability_evaluate
+    </sql>
+
+    <select id="selectLcCheckinAbilityEvaluateList" parameterType="LcCheckinAbilityEvaluate" resultMap="LcCheckinAbilityEvaluateResult">
+        <include refid="selectLcCheckinAbilityEvaluateVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="selfCareScore != null "> and self_care_score = #{selfCareScore}</if>
+            <if test="mentalStatus != null  and mentalStatus != ''"> and mental_status = #{mentalStatus}</if>
+            <if test="mobility != null  and mobility != ''"> and mobility = #{mobility}</if>
+            <if test="careLevel != null  and careLevel != ''"> and care_level = #{careLevel}</if>
+            <if test="evaluateDoctor != null  and evaluateDoctor != ''"> and evaluate_doctor = #{evaluateDoctor}</if>
+            <if test="evaluateTime != null "> and evaluate_time = #{evaluateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLcCheckinAbilityEvaluateById" parameterType="Long" resultMap="LcCheckinAbilityEvaluateResult">
+        <include refid="selectLcCheckinAbilityEvaluateVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcCheckinAbilityEvaluate" parameterType="LcCheckinAbilityEvaluate" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_checkin_ability_evaluate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">apply_id,</if>
+            <if test="selfCareScore != null">self_care_score,</if>
+            <if test="mentalStatus != null">mental_status,</if>
+            <if test="mobility != null">mobility,</if>
+            <if test="careLevel != null">care_level,</if>
+            <if test="evaluateDoctor != null">evaluate_doctor,</if>
+            <if test="evaluateTime != null">evaluate_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">#{applyId},</if>
+            <if test="selfCareScore != null">#{selfCareScore},</if>
+            <if test="mentalStatus != null">#{mentalStatus},</if>
+            <if test="mobility != null">#{mobility},</if>
+            <if test="careLevel != null">#{careLevel},</if>
+            <if test="evaluateDoctor != null">#{evaluateDoctor},</if>
+            <if test="evaluateTime != null">#{evaluateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcCheckinAbilityEvaluate" parameterType="LcCheckinAbilityEvaluate">
+        update lc_checkin_ability_evaluate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null">apply_id = #{applyId},</if>
+            <if test="selfCareScore != null">self_care_score = #{selfCareScore},</if>
+            <if test="mentalStatus != null">mental_status = #{mentalStatus},</if>
+            <if test="mobility != null">mobility = #{mobility},</if>
+            <if test="careLevel != null">care_level = #{careLevel},</if>
+            <if test="evaluateDoctor != null">evaluate_doctor = #{evaluateDoctor},</if>
+            <if test="evaluateTime != null">evaluate_time = #{evaluateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcCheckinAbilityEvaluateById" parameterType="Long">
+        delete from lc_checkin_ability_evaluate where id = #{id}
+    </delete>
+
+    <delete id="deleteLcCheckinAbilityEvaluateByIds" parameterType="String">
+        delete from lc_checkin_ability_evaluate where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

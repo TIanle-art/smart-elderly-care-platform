@@ -1,0 +1,73 @@
+<view class="container">
+
+<!-- 服务图片 -->
+<image class="item_img" src="{{detail.imageUrl}}" mode="widthFix"></image>
+
+<!-- 服务信息 -->
+<view class="info">
+  <text class="title">{{detail.itemName}}</text>
+  <text class="desc">{{detail.itemDesc}}</text>
+  <view class="price">
+  ¥{{detail.price}}
+  <text class="price-unit">/{{detail.unit}}</text>
+  </view>
+</view>
+
+<!-- 选择服务家人 -->
+<view class="form-item" bindtap="checkFamilyBeforeShow">
+  <text class="label">服务家人 <text class="required">必填</text></text>
+  <text class="value">{{familyName || '请选择'}}</text>
+</view>
+
+
+<!-- 选择日期（官方） -->
+<view class="form-item">
+  <text class="label">服务日期 <text class="required">必填</text></text>
+  <picker mode="date" value="{{serviceDate}}" start="{{nowDate}}" end="{{endDate}}" bindchange="onDateChange">
+    <view class="value">
+      {{serviceDate || '请选择日期'}}
+    </view>
+  </picker>
+</view>
+
+<!-- 选择时间（官方） -->
+<view class="form-item">
+  <text class="label">服务时间 <text class="required">必填</text></text>
+  <picker mode="time" value="{{serviceTime}}" start="00:00" end="23:59" bindchange="onTimeChange">
+    <view class="value">
+      {{serviceTime || '请选择时间'}}
+    </view>
+  </picker>
+</view>
+
+
+<!-- 立即购买 -->
+<button class="buy-btn {{familyName && serviceDate && serviceTime ? '' : 'disabled'}}" bindtap="toBuy">立即购买</button>
+
+<!-- 家人弹窗 -->
+<view class="picker-popup" wx:if="{{showFamilyList}}">
+  <view class="picker-mask" bindtap="hideFamilyPicker"></view>
+  <view class="picker-content">
+    <view class="picker-header">
+      <text>选择家人</text>
+      <text bindtap="hideFamilyPicker">×</text>
+    </view>
+    <scroll-view class="picker-body" scroll-y>
+      <view wx:for="{{familyList}}" wx:key="id" class="picker-item"
+        bindtap="selectFamilyItem" data-id="{{item.id}}" data-name="{{item.name}}">
+        {{item.name}}
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- ================== 新增：无家人提示弹窗 ================== -->
+<view class="empty-family-modal" wx:if="{{showEmptyFamilyModal}}">
+  <view class="modal-mask" bindtap="closeEmptyModal"></view>
+  <view class="modal-box">
+    <text class="modal-text">您暂时没有绑定的家人</text>
+    <button class="modal-btn" bindtap="goToBindFamily">去绑定</button>
+  </view>
+</view>
+
+</view>

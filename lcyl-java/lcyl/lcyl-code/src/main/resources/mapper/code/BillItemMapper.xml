@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.BillItemMapper">
+    
+    <resultMap type="BillItem" id="BillItemResult">
+        <result property="id"    column="id"    />
+        <result property="billId"    column="bill_id"    />
+        <result property="billNo"    column="bill_no"    />
+        <result property="itemType"    column="item_type"    />
+        <result property="feeName"    column="fee_name"    />
+        <result property="serviceContent"    column="service_content"    />
+        <result property="amount"    column="amount"    />
+        <result property="sort"    column="sort"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBillItemVo">
+        select id, bill_id, bill_no, item_type, fee_name, service_content, amount, sort, remark from lc_bill_item
+    </sql>
+
+    <select id="selectBillItemList" parameterType="BillItem" resultMap="BillItemResult">
+        <include refid="selectBillItemVo"/>
+        <where>  
+            <if test="billId != null "> and bill_id = #{billId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBillItemById" parameterType="Long" resultMap="BillItemResult">
+        <include refid="selectBillItemVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectNursingItemsByElderId" resultMap="BillItemResult">
+        SELECT bi.*
+        FROM lc_bill_item bi
+                 INNER JOIN lc_bill b ON bi.bill_id = b.id
+        WHERE b.elder_id = #{elderId}
+          AND b.bill_type = '2'
+          AND b.del_flag = '0'
+        order by  b.create_time desc
+    </select>
+
+    <insert id="insertBillItem" parameterType="BillItem" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_bill_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="billId != null">bill_id,</if>
+            <if test="billNo != null and billNo != ''">bill_no,</if>
+            <if test="itemType != null">item_type,</if>
+            <if test="feeName != null">fee_name,</if>
+            <if test="serviceContent != null">service_content,</if>
+            <if test="amount != null">amount,</if>
+            <if test="sort != null">sort,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="billId != null">#{billId},</if>
+            <if test="billNo != null and billNo != ''">#{billNo},</if>
+            <if test="itemType != null">#{itemType},</if>
+            <if test="feeName != null">#{feeName},</if>
+            <if test="serviceContent != null">#{serviceContent},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBillItem" parameterType="BillItem">
+        update lc_bill_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="billId != null">bill_id = #{billId},</if>
+            <if test="billNo != null and billNo != ''">bill_no = #{billNo},</if>
+            <if test="itemType != null">item_type = #{itemType},</if>
+            <if test="feeName != null">fee_name = #{feeName},</if>
+            <if test="serviceContent != null">service_content = #{serviceContent},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBillItemById" parameterType="Long">
+        delete from lc_bill_item where id = #{id}
+    </delete>
+
+    <delete id="deleteBillItemByIds" parameterType="String">
+        delete from lc_bill_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

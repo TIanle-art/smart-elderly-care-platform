@@ -1,0 +1,98 @@
+{
+  "pages": [
+    "pages/home/home", 
+    "pages/index/index",
+    "pages/my/my",
+    
+    "pages/family/family",
+    "pages/servicePage/servicePage"
+    
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "乐康养老",
+    "navigationBarBackgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#939393",
+    "selectedColor": "#87CEFB",
+    "backgroundColor": "F7F6FB",
+    "borderStyle": "black",
+    "position": "bottom",
+    "list": [
+      {
+      "pagePath": "pages/home/home",
+      "text": "首页",
+      "iconPath": "/images/home.png",
+      "selectedIconPath": "/images/homeHover.png"
+    },
+    {
+      "pagePath": "pages/family/family",
+      "text": "家人",
+      "iconPath": "/images/family.png",
+      "selectedIconPath": "/images/familyHover.png"
+    },
+    {
+      "pagePath": "pages/servicePage/servicePage",
+      "text": "服务",
+      "iconPath": "/images/serve.png",
+      "selectedIconPath": "/images/serveHover.png"
+    },
+    {
+      "pagePath": "pages/my/my",
+      "text": "我的",
+      "iconPath": "/images/my.png",
+      "selectedIconPath": "/images/myHover.png"
+    }
+  ]
+  },
+  "subPackages": [
+    {
+      "root": "home",
+      "name": "home",
+      "pages": [
+        "pages/eldervisit/eldervisit",
+        "pages/customVisit/customVisit",
+        "pages/aboutInfo/aboutInfo",
+        "pages/registerElder/registerElder",
+        "pages/myService/myService",
+        "pages/myOrder/myOrder",
+        "pages/question/question",
+        "pages/roomDetail/roomDetail"
+      ]
+    }, {
+      "root": "family",
+      "name": "family",
+      "pages": [
+        "pages/addfamily/addfamily",
+        "pages/mybill/mybill"
+      ]
+    },
+    {
+      "root": "my",
+      "name": "my",
+      "pages": [
+        "pages/myOrder/myOrder",
+        "pages/myOrderDetail/myOrderDetail",
+        "pages/myApply/myApply",
+        "pages/myContract/myContract",
+        "pages/myBill/myBill",
+        "pages/myBillDetail/myBillDetail",
+        "pages/myProfile/myProfile",
+        "pages/contractDetails/contractDetails"
+      ]
+    },
+    {
+      "root": "servicePage",
+      "name": "servicePage",
+      "pages": [
+        "pages/serviceDetail/serviceDetail",
+        "pages/orderConfirm/orderConfirm",
+        "pages/payPage/payPage",
+        "pages/successPage/successPage"
+      ]
+    }
+  ],
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

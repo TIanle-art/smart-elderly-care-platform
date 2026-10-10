@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.system.mapper.BedMapper">
+
+    <!-- ===================== 联查：楼层+房间+床位（DTO） ===================== -->
+    <!-- ===================== 联查：楼层+房间+床位（DTO） ===================== -->
+    <!-- ===================== 联查：楼层+房间+床位（DTO） ===================== -->
+    <select id="selectFloorRoomBedByFloorId" resultType="com.lcyl.system.domain.dto.FlatBedDTO">
+        SELECT
+        f.id AS floorId,
+        f.name AS floorName,
+        r.id AS roomId,
+        r.code AS roomCode,
+        rt.name AS roomTypeName,
+        rt.photo AS photo,
+        b.id AS bedId,
+        b.bed_number AS bedNumber,
+        b.bed_status AS bedStatus,
+        b.sort AS sort,
+        b.remark AS remark,
+        e.name AS elderName,
+        e.id AS elderId,
+        nl.level_name AS nursingLevelName,
+        c.start_time AS startTime,
+        c.end_time AS endTime
+        FROM lc_floor f
+        LEFT JOIN lc_room r ON f.id = r.floor_id
+        LEFT JOIN lc_room_type rt ON r.room_type_id = rt.id
+        LEFT JOIN bed b ON r.id = b.room_id
+        LEFT JOIN elder e ON b.id = e.bed_id
+        LEFT JOIN contract c ON e.id = c.elder_id
+        LEFT JOIN check_in_config cic ON e.id = cic.elder_id
+        LEFT JOIN lc_nursing_level nl ON cic.nursing_level_id = nl.id
+        WHERE 1=1
+        <if test="floorId != null"> AND f.id = #{floorId}</if>
+        <if test="elderId != null"> and c.elder_id = #{elderId}</if>
+        ORDER BY b.bed_number
+    </select>
+
+    <!-- ===================== 基础结果映射 ===================== -->
+    <resultMap id="BedResult" type="com.lcyl.system.domain.Bed">
+        <id property="id" column="id"/>
+        <result property="bedNumber" column="bed_number"/>
+        <result property="bedStatus" column="bed_status"/>
+        <result property="sort" column="sort"/>
+        <result property="roomId" column="room_id"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <!-- ===================== 公共列片段 ===================== -->
+    <sql id="selectBedColumns">
+        id, bed_number, bed_status, sort, room_id, remark,
+        create_time, update_time, create_by, update_by,code
+    </sql>
+
+    <!-- ===================== 条件分页列表 ===================== -->
+    <select id="selectBedList" parameterType="com.lcyl.system.domain.Bed" resultMap="BedResult">
+        SELECT
+        b.id,
+        b.bed_number,
+        b.bed_status,
+        b.sort,
+        b.room_id,
+        b.remark,
+        b.create_time,
+        b.update_time,
+        b.create_by,
+        b.update_by
+        FROM bed b
+        <where>
+            <if test="bedNumber != null and bedNumber != ''">AND b.bed_number = #{bedNumber}</if>
+            <if test="bedStatus != null">AND b.bed_status = #{bedStatus}</if>
+            <if test="roomId != null">AND b.room_id = #{roomId}</if>
+        </where>
+    </select>
+
+    <!-- ===================== 根据ID单查 ===================== -->
+    <select id="selectBedById" parameterType="java.lang.Long" resultMap="BedResult">
+        SELECT <include refid="selectBedColumns"/>
+        FROM bed
+        WHERE id = #{id}
+    </select>
+
+    <!-- ===================== 统计床位数 ===================== -->
+    <select id="countBedByRoomId" parameterType="Long" resultType="Integer">
+        SELECT COUNT(1) FROM bed WHERE room_id = #{roomId}
+    </select>
+    <select id="selectBedNumber" resultType="com.lcyl.system.domain.Bed">
+        SELECT id
+        FROM bed
+        WHERE bed_number = #{bedNumber}
+    </select>
+
+    <!-- ===================== 新增 ===================== -->
+    <insert id="insertBed" parameterType="com.lcyl.system.domain.Bed" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bed
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bedNumber != null">bed_number,</if>
+            <if test="bedStatus != null">bed_status,</if>
+            <if test="sort != null">sort,</if>
+            <if test="roomId != null">room_id,</if>
+            <if test="remark != null">remark,</if>
+            create_time, create_by
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bedNumber != null">#{bedNumber},</if>
+            <if test="bedStatus != null">#{bedStatus},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="roomId != null">#{roomId},</if>
+            <if test="remark != null">#{remark},</if>
+            now(), #{createBy}
+        </trim>
+    </insert>
+
+    <!-- ===================== 修改 ===================== -->
+    <update id="updateBed1" parameterType="com.lcyl.system.domain.Bed">
+        UPDATE bed
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bedNumber != null">bed_number = #{bedNumber},</if>
+            <if test="bedStatus != null">bed_status = #{bedStatus},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = now(),
+            update_by = #{updateBy}
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <!-- ===================== 删除 ===================== -->
+    <delete id="deleteBedById" parameterType="java.lang.Long">
+        DELETE FROM bed WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBedByIds">
+        DELETE FROM bed WHERE id IN
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

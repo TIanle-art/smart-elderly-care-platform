@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.NurseMapper">
+    
+    <resultMap type="Nurse" id="NurseResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectNurseVo">
+        select id, name, phone, create_time from lc_nurse
+    </sql>
+
+    <select id="selectNurseList" parameterType="Nurse" resultMap="NurseResult">
+        <include refid="selectNurseVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        </where>
+    </select>
+    
+    <select id="selectNurseById" parameterType="Long" resultMap="NurseResult">
+        <include refid="selectNurseVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNurseByUserId" resultType="com.lcyl.code.domain.Nurse">
+        SELECT id, name, phone, user_id, create_time
+        FROM lc_nurse
+        WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertNurse" parameterType="Nurse" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_nurse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNurse" parameterType="Nurse">
+        update lc_nurse
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNurseById" parameterType="Long">
+        delete from lc_nurse where id = #{id}
+    </delete>
+
+    <delete id="deleteNurseByIds" parameterType="String">
+        delete from lc_nurse where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

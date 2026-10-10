@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lcyl.code.mapper.IndexMapper">
+
+    <select id="countLeave" resultType="java.lang.Integer">
+        select count(1) from lc_elder_leave where status = 'approving'
+    </select>
+
+    <select id="countElder" resultType="java.lang.Integer">
+        select count(1) from elder
+    </select>
+
+    <select id="countBed" resultType="java.lang.Integer">
+        select count(1) from bed
+    </select>
+
+    <select id="countBedUse" resultType="java.lang.Integer">
+        select count(1) from bed where bed_status = '1' or bed_status = '2'
+    </select>
+
+    <select id="countNoLive" resultType="java.lang.Integer">
+        select count(1) from bed where bed_status = '0'
+    </select>
+
+    <select id="countPerson" resultType="java.lang.Integer">
+        select count(1) from sys_user
+    </select>
+
+    <select id="countMan" resultType="java.lang.Integer">
+        select count(1) from sys_user where sex = '0'
+    </select>
+    <select id="selectCheckInGroupByDay" resultType="java.util.Map">
+        select date_format(check_in_time,'%m-%d') as date,
+        count(1) as cnt
+        from check_in
+        where check_in_time between #{start} and #{end}
+        group by date_format(check_in_time,'%m-%d')
+        order by date
+    </select>
+
+    <select id="selectRetreatGroupByDay" resultType="java.util.Map">
+        SELECT DATE_FORMAT(check_out_time, '%m-%d') AS date, COUNT(*) AS cnt
+        FROM lc_retreat
+        WHERE check_out_time BETWEEN #{start} AND #{end}
+        GROUP BY DATE_FORMAT(check_out_time, '%m-%d')
+        ORDER BY date
+    </select>
+
+    <!-- 老人护理等级分布统计 -->
+    <select id="selectNursingLevelStat" resultType="java.util.Map">
+        SELECT
+            lnl.level_name name,
+            COUNT(cic.id) value
+        FROM check_in_config cic
+            LEFT JOIN lc_nursing_level lnl ON cic.nursing_level_id = lnl.id
+        GROUP BY cic.nursing_level_id, lnl.level_name
+    </select>
+
+    <!-- 老人年龄 + 性别分布统计-->
+    <select id="selectAgeGenderStat" resultType="java.util.Map">
+        SELECT
+        CASE
+        WHEN age &lt; 60 THEN '60岁以下'
+        WHEN age BETWEEN 60 AND 70 THEN '60-70岁'
+        WHEN age BETWEEN 71 AND 80 THEN '71-80岁'
+        WHEN age BETWEEN 81 AND 90 THEN '81-90岁'
+        ELSE '90岁以上'
+        END AS ageRange,
+        sex,
+        COUNT(*) cnt
+        FROM elder
+        GROUP BY ageRange, sex
+    </select>
+
+    <!-- 服务项目统计 -->
+    <select id="selectServiceAbilityStat" resultType="java.util.Map">
+        SELECT
+            project_name name,
+            COUNT(id) value
+        FROM lc_service_order
+        WHERE project_name IS NOT NULL
+        GROUP BY project_name
+    </select>
+
+    <select id="countServiceFee" resultType="java.lang.Integer">
+        SELECT IFNULL(SUM(payable_amount), 0)
+        FROM lc_bill
+        WHERE bill_type = 2
+    </select>
+
+    <select id="countMonthFee" resultType="java.lang.Integer">
+        SELECT IFNULL(SUM(payable_amount), 0)
+        FROM lc_bill
+        WHERE bill_type = 1
+    </select>
+
+    <select id="selectIncomeByDateRange" resultType="map">
+        SELECT
+        DATE_FORMAT(pay_time, '%m-%d') AS day,
+        IFNULL(SUM(order_amount), 0) AS amount
+        FROM lc_service_order
+        WHERE del_flag = 0
+        AND pay_time BETWEEN #{start} AND #{end}
+        GROUP BY day
+        ORDER BY MIN(pay_time)
+    </select>
+
+    <select id="selectRefundByDateRange" resultType="map">
+        SELECT
+        DATE_FORMAT(refund_time, '%m-%d') AS day,
+        IFNULL(SUM(refund_amount), 0) AS amount
+        FROM lc_service_order_refund
+        WHERE del_flag = 0
+        AND refund_time BETWEEN #{start} AND #{end}
+        GROUP BY day
+        ORDER BY MIN(refund_time)
+    </select>
+
+    <select id="countServiceOrderByExecuteTime" resultType="java.util.Map">
+        SELECT
+        DATE_FORMAT(execute_time, '%m-%d') AS day,
+        COUNT(id) AS cnt
+        FROM lc_service_order
+        WHERE del_flag = 0
+        AND execute_time IS NOT NULL
+        <if test="startDate != null and startDate != ''">
+            AND execute_time >= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND execute_time &lt;= DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+        </if>
+        GROUP BY day
+        ORDER BY MIN(execute_time)
+    </select>
+
+</mapper>

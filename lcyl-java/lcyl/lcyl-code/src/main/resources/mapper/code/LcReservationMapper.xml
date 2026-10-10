@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.LcReservationMapper">
+    
+    <resultMap type="LcReservation" id="LcReservationResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="olderName"    column="older_name"    />
+        <result property="appointmentTime"    column="appointment_time"    />
+        <result property="createPeople"    column="create_people"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+        <result property="visitTime" column="visit_time"/>
+    </resultMap>
+
+    <sql id="selectLcReservationVo">
+        select id, type, name, phone, older_name, appointment_time, create_people, create_time, status ,visit_time from lc_reservation
+    </sql>
+
+    <select id="selectLcReservationList" parameterType="LcReservation" resultMap="LcReservationResult">
+        <include refid="selectLcReservationVo"/>
+        <where>  
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="olderName != null  and olderName != ''"> and older_name like concat('%', #{olderName}, '%')</if>
+            <if test="appointmentTime != null "> and appointment_time = #{appointmentTime}</if>
+            <if test="createPeople != null  and createPeople != ''"> and create_people = #{createPeople}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectLcReservationById" parameterType="Long" resultMap="LcReservationResult">
+        <include refid="selectLcReservationVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcReservation" parameterType="LcReservation" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_reservation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">type,</if>
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="olderName != null">older_name,</if>
+            <if test="appointmentTime != null">appointment_time,</if>
+            <if test="createPeople != null">create_people,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+            <if test="memberId !=null">member_id</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},</if>
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="olderName != null">#{olderName},</if>
+            <if test="appointmentTime != null">#{appointmentTime},</if>
+            <if test="createPeople != null">#{createPeople},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="memberId !=null">#{memberId}</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcReservation" parameterType="LcReservation">
+        update lc_reservation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type = #{type},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="olderName != null">older_name = #{olderName},</if>
+            <if test="appointmentTime != null">appointment_time = #{appointmentTime},</if>
+            <if test="createPeople != null">create_people = #{createPeople},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateStatus">
+        update lc_reservation set status = 3 where  appointment_time &lt;= now() and status = 0
+    </update>
+
+    <delete id="deleteLcReservationById" parameterType="Long">
+        delete from lc_reservation where id = #{id}
+    </delete>
+
+    <delete id="deleteLcReservationByIds" parameterType="String">
+        delete from lc_reservation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectLcReservationType" parameterType="LcReservation" resultMap="LcReservationResult">
+        <include refid="selectLcReservationVo"/>
+        where type = #{id}
+    </select>
+
+    <update id="updateVisitTime">
+        update lc_reservation set visit_time = #{visitTime} where id = #{id}
+    </update>
+
+    <update id="updateStatusByTime">
+        update lc_reservation set status = 1 where id = #{id}
+    </update>
+
+    <select id="selectLcReservationstatus" resultType="com.lcyl.code.domain.vo.MyVisitVo">
+        SELECT
+        lr.id,
+        lr.phone,
+        lr.name,
+        lr.older_name AS olderName,
+        lr.type,
+        lr.appointment_time AS appointmentTime,
+        lr.status,
+        lr.visit_time AS visitTime,
+        (
+        SELECT lem.greeting
+        FROM lc_elder_member lem
+        JOIN elder e ON e.id = lem.elder_id
+        WHERE lem.member_id = lr.member_id
+        AND (
+        lr.older_name = e.name
+        OR
+        lr.older_name IS NULL
+        )
+        LIMIT 1
+        ) AS greeting
+        FROM lc_reservation lr
+        <where>
+        lr.member_id = #{memberId}
+            <if test="status != null">
+                AND lr.`status` = #{status}
+            </if>
+        </where>
+        order by lr.appointment_time desc
+    </select>
+
+    <update id="updateLcReservationById">
+        update lc_reservation set status = 2 where id = #{id}
+    </update>
+
+<!--    <update id="updateLcReservationById">-->
+<!--        update lc_reservation set status = 3 where id = #{id}-->
+<!--    </update>-->
+</mapper>

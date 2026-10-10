@@ -1,0 +1,95 @@
+<view class="mine-page">
+  <!-- 顶部背景区域 -->
+  <view class="top-banner">
+    <image class="banner-bg" src="/images/mybg.png" mode="scaleToFill"></image>
+
+    <view class="user-info">
+      <image class="avatar" src="{{form.avatar || defaultAvatar}}" />
+      <text class="username">{{form.name||defaultName}}</text>
+      <button size="mini" bindtap="goProfile">编辑资料</button>
+    </view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="content-wrap">
+    <!-- 我的订单 -->
+    <view class="card order-card">
+      <view class="section-header">
+        <text class="section-title">我的订单</text>
+        <navigator url="/my/pages/myOrder/myOrder?tab=all" class="more-wrap">
+          <text class="section-more">查看全部</text>
+          <text class="more-arrow">›</text>
+        </navigator>
+      </view>
+
+      <view class="order-tabs">
+        <navigator class="order-nav" url="/my/pages/myOrder/myOrder?tab=pendingPay">
+          <view class="order-tab">
+            <view class="icon-box">
+              <image src="/images/icon-dzf.png" class="order-pic" />
+            </view>
+            <text class="tab-text">待支付</text>
+          </view>
+        </navigator>
+
+        <navigator class="order-nav" url="/my/pages/myOrder/myOrder?tab=pendingService">
+          <view class="order-tab">
+            <view class="icon-box">
+              <image src="/images/icon-dfw.png" class="order-pic" />
+            </view>
+            <text class="tab-text">待执行</text>
+          </view>
+        </navigator>
+
+        <navigator class="order-nav" url="/my/pages/myOrder/myOrder?tab=executed">
+          <view class="order-tab">
+            <view class="icon-box">
+              <image src="/images/icon-yzx.png" class="order-pic" />
+            </view>
+            <text class="tab-text">已执行</text>
+          </view>
+        </navigator>
+
+        <navigator class="order-nav" url="/my/pages/myOrder/myOrder?tab=completed">
+          <view class="order-tab">
+            <view class="icon-box">
+              <image src="/images/icon-dwc.png" class="order-pic" />
+            </view>
+            <text class="tab-text">已完成</text>
+          </view>
+        </navigator>
+      </view>
+    </view>
+
+    <!-- 菜单列表 -->
+    <view class="card menu-card">
+      <navigator url="/my/pages/myApply/myApply" hover-class="none">
+        <view class="menu-item">
+          <text class="menu-text">我的预约</text>
+          <text class="menu-arrow">›</text>
+        </view>
+      </navigator>
+
+      <navigator url="/my/pages/myContract/myContract" hover-class="none">
+        <view class="menu-item">
+          <text class="menu-text">我的合同</text>
+          <text class="menu-arrow">›</text>
+        </view>
+      </navigator>
+
+      <navigator url="/my/pages/myBill/myBill" hover-class="none">
+        <view class="menu-item no-border">
+          <text class="menu-text">我的账单</text>
+          <text class="menu-arrow">›</text>
+        </view>
+      </navigator>
+    </view>
+
+    <!-- 退出登录 -->
+    <!-- <view class="logout-wrap"> -->
+    <view class="logout-btn" bind:tap="logout">
+      退出登录
+    </view>
+    <!-- </view> -->
+  </view>
+</view>

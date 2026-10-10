@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcyl.code.mapper.BillMapper">
+    
+    <resultMap type="Bill" id="BillResult">
+        <result property="id"    column="id"    />
+        <result property="billNo"    column="bill_no"    />
+        <result property="billType"    column="bill_type"    />
+        <result property="billMonth"    column="bill_month"    />
+        <result property="elderId"    column="elder_id"    />
+        <result property="elderName"    column="elder_name"    />
+        <result property="elderIdCard"    column="elder_id_card"    />
+        <result property="bedId"    column="bed_id"    />
+        <result property="bedNo"    column="bed_no"    />
+        <result property="billAmount"    column="bill_amount"    />
+        <result property="payableAmount"    column="payable_amount"    />
+        <result property="tradeStatus"    column="trade_status"    />
+        <result property="payDeadline"    column="pay_deadline"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="daysCount"    column="days_count"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="creatorName"    column="creator_name"    />
+        <result property="cancelReason"    column="cancel_reason"    />
+        <result property="cancelTime"    column="cancel_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <resultMap type="com.lcyl.code.domain.vo.WxMyBillVO" id="WxMyBillResult">
+        <result property="id" column="id" />
+        <result property="billNo" column="bill_no" />
+        <result property="billType" column="bill_type" />
+        <result property="elderId" column="elder_id" />
+        <result property="elderName" column="elder_name" />
+        <result property="billMonth" column="bill_month" />
+        <result property="payableAmount" column="payable_amount" />
+        <result property="tradeStatus" column="trade_status" />
+        <result property="payDeadline" column="pay_deadline" />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <sql id="selectBillVo">
+        select id, bill_no, bill_type, bill_month, elder_id, elder_name, elder_id_card, bed_id, bed_no, bill_amount, payable_amount, trade_status, pay_deadline, start_date, end_date, days_count, creator_id, creator_name, cancel_reason, cancel_time, remark, del_flag, create_by, create_time, update_by, update_time from lc_bill
+    </sql>
+
+    <select id="selectBillList" parameterType="Bill" resultMap="BillResult">
+        <include refid="selectBillVo"/>
+        <where>  
+            <if test="billNo != null  and billNo != ''"> and bill_no like concat('%', #{billNo}, '%')</if>
+            <if test="elderId != null "> and elder_id = #{elderId}</if>
+            <if test="elderName != null  and elderName != ''"> and elder_name like concat('%', #{elderName}, '%')</if>
+            <if test="elderIdCard != null  and elderIdCard != ''"> and elder_id_card like concat('%', #{elderIdCard}, '%')</if>
+            <if test="tradeStatus != null  and tradeStatus != ''"> and trade_status = #{tradeStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectBillById" parameterType="Long" resultMap="BillResult">
+        <include refid="selectBillVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectWxMyBillList" resultMap="WxMyBillResult">
+        select
+            b.id,
+            b.bill_no,
+            b.bill_type,
+            b.elder_id,
+            b.elder_name,
+            b.bill_month,
+            b.payable_amount,
+            b.trade_status,
+            b.pay_deadline,
+            b.create_time
+        from lc_bill b
+        inner join lc_elder_member em on b.elder_id = em.elder_id
+        where em.member_id = #{memberId}
+          and b.del_flag = '0'
+        order by b.create_time desc
+    </select>
+
+    <select id="selectWxMyBillDetail" resultMap="BillResult">
+        select
+            b.id,
+            b.bill_no,
+            b.bill_type,
+            b.bill_month,
+            b.elder_id,
+            b.elder_name,
+            b.elder_id_card,
+            b.bed_id,
+            b.bed_no,
+            b.bill_amount,
+            b.payable_amount,
+            b.trade_status,
+            b.pay_deadline,
+            b.start_date,
+            b.end_date,
+            b.days_count,
+            b.creator_id,
+            b.creator_name,
+            b.cancel_reason,
+            b.cancel_time,
+            b.remark,
+            b.del_flag,
+            b.create_by,
+            b.create_time,
+            b.update_by,
+            b.update_time
+        from lc_bill b
+        inner join lc_elder_member em on b.elder_id = em.elder_id
+        where em.member_id = #{memberId}
+          and b.id = #{id}
+          and b.del_flag = '0'
+        limit 1
+    </select>
+
+    <insert id="insertBill" parameterType="Bill" useGeneratedKeys="true" keyProperty="id">
+        insert into lc_bill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="billNo != null">bill_no,</if>
+            <if test="billType != null and billType != ''">bill_type,</if>
+            <if test="billMonth != null and billMonth != ''">bill_month,</if>
+            <if test="elderId != null">elder_id,</if>
+            <if test="elderName != null and elderName != ''">elder_name,</if>
+            <if test="elderIdCard != null">elder_id_card,</if>
+            <if test="bedId != null">bed_id,</if>
+            <if test="bedNo != null">bed_no,</if>
+            <if test="billAmount != null">bill_amount,</if>
+            <if test="payableAmount != null">payable_amount,</if>
+            <if test="tradeStatus != null and tradeStatus != ''">trade_status,</if>
+            <if test="payDeadline != null">pay_deadline,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="daysCount != null">days_count,</if>
+            <if test="creatorId != null">creator_id,</if>
+            <if test="creatorName != null">creator_name,</if>
+            <if test="cancelReason != null">cancel_reason,</if>
+            <if test="cancelTime != null">cancel_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="billNo != null">#{billNo},</if>
+            <if test="billType != null and billType != ''">#{billType},</if>
+            <if test="billMonth != null and billMonth != ''">#{billMonth},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="elderName != null and elderName != ''">#{elderName},</if>
+            <if test="elderIdCard != null">#{elderIdCard},</if>
+            <if test="bedId != null">#{bedId},</if>
+            <if test="bedNo != null">#{bedNo},</if>
+            <if test="billAmount != null">#{billAmount},</if>
+            <if test="payableAmount != null">#{payableAmount},</if>
+            <if test="tradeStatus != null and tradeStatus != ''">#{tradeStatus},</if>
+            <if test="payDeadline != null">#{payDeadline},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="daysCount != null">#{daysCount},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="creatorName != null">#{creatorName},</if>
+            <if test="cancelReason != null">#{cancelReason},</if>
+            <if test="cancelTime != null">#{cancelTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBill" parameterType="Bill">
+        update lc_bill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="billNo != null">bill_no = #{billNo},</if>
+            <if test="billType != null and billType != ''">bill_type = #{billType},</if>
+            <if test="billMonth != null and billMonth != ''">bill_month = #{billMonth},</if>
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="elderName != null and elderName != ''">elder_name = #{elderName},</if>
+            <if test="elderIdCard != null">elder_id_card = #{elderIdCard},</if>
+            <if test="bedId != null">bed_id = #{bedId},</if>
+            <if test="bedNo != null">bed_no = #{bedNo},</if>
+            <if test="billAmount != null">bill_amount = #{billAmount},</if>
+            <if test="payableAmount != null">payable_amount = #{payableAmount},</if>
+            <if test="tradeStatus != null and tradeStatus != ''">trade_status = #{tradeStatus},</if>
+            <if test="payDeadline != null">pay_deadline = #{payDeadline},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="daysCount != null">days_count = #{daysCount},</if>
+            <if test="creatorId != null">creator_id = #{creatorId},</if>
+            <if test="creatorName != null">creator_name = #{creatorName},</if>
+            <if test="cancelReason != null">cancel_reason = #{cancelReason},</if>
+            <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBillById" parameterType="Long">
+        delete from lc_bill where id = #{id}
+    </delete>
+
+    <delete id="deleteBillByIds" parameterType="String">
+        delete from lc_bill where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="checkMonthlyBillExists" resultType="int">
+        select count(1)
+        from lc_bill
+        where del_flag = '0'
+          and bill_type = '1'
+          and elder_id = #{elderId}
+          and bill_month = #{billMonth}
+    </select>
+
+    <select id="checkExpenseBillExists" resultType="int">
+        select count(1)
+        from lc_bill
+        where del_flag = '0'
+          and bill_type = '2'
+          and remark like concat('%', #{orderNo}, '%')
+    </select>
+
+    <select id="selectGenerateElderInfo" parameterType="Long" resultType="com.lcyl.code.domain.vo.BillGenerateElderVO">
+        select
+            e.id as elderId,
+            e.name as elderName,
+            e.id_card_no as elderIdCard,
+            e.bed_number as bedNo
+        from elder e
+        where e.id = #{elderId}
+    </select>
+
+    <select id="selectRoomTypePriceByElderId" parameterType="Long" resultType="java.math.BigDecimal">
+        select lrt.price
+        from elder e
+        left join bed lb on e.bed_id = lb.id
+        left join lc_room lr on lb.room_id = lr.id
+        left join lc_room_type lrt on lrt.id = lr.room_type_id
+        where e.id = #{elderId}
+    </select>
+
+    <select id="selectNursingMonthlyFeeByElderId" parameterType="Long" resultType="java.math.BigDecimal">
+        select lnl.monthly_fee
+        from check_in_config cic
+        left join lc_nursing_level lnl on cic.nursing_level_id = lnl.id
+        where cic.elder_id = #{elderId}
+    </select>
+    <insert id="insertBillPaymentRecord" parameterType="com.lcyl.code.domain.dto.BillPayDTO">
+        insert into lc_bill_payment
+        (
+            payment_no,
+            bill_id,
+            bill_no,
+            pay_time,
+            pay_channel,
+            pay_method,
+            wechat_order_no,
+            pay_amount,
+            voucher_url,
+            pay_remark,
+            operator_id,
+            operator_name,
+            create_by,
+            create_time
+        )
+        values
+            (
+                #{paymentNo},
+                #{billId},
+                #{billNo},
+                #{payTime},
+                #{payChannel},
+                #{payMethod},
+                #{wechatOrderNo},
+                #{payAmount},
+                #{voucherUrl},
+                #{payRemark},
+                #{operatorId},
+                #{operatorName},
+                #{createBy},
+                #{createTime}
+            )
+    </insert>
+    <select id="countBillByElderIdAndMonth" resultType="java.lang.Integer">
+        select count(*) from lc_bill where elder_id = #{elderId} and bill_month = #{billMonth}
+    </select>
+
+    <select id="selectPendingBillsByElderId" resultMap="BillResult">
+        <include refid="selectBillVo"/>
+        WHERE elder_id = #{elderId}
+          AND trade_status = '0'
+          AND del_flag = '0'
+        ORDER BY pay_deadline ASC
+    </select>
+
+
+</mapper>

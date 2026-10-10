@@ -1,0 +1,66 @@
+<view class="page">
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="value"
+      class="tab-item {{currentTab === item.value ? 'active' : ''}}"
+      data-value="{{item.value}}"
+      bindtap="handleTabChange"
+    >
+      {{item.label}}
+    </view>
+  </view>
+
+  <view class="order-list">
+    <block wx:if="{{filteredOrders.length > 0}}">
+      <view class="order-card" wx:for="{{filteredOrders}}" wx:key="id">
+        <view class="order-main">
+          <image class="service-image" src="{{item.image}}" mode="aspectFill"></image>
+
+          <view class="order-info">
+            <view class="order-top">
+              <text class="service-name">{{item.serviceName}}</text>
+              <text class="status-text status-{{item.status}}">{{item.statusText}}</text>
+            </view>
+
+            <view class="info-line">服务老人：{{item.serverName}}</view>
+            <view class="info-line">期望服务时间：{{item.serviceTime}}</view>
+
+            <view class="price-line">
+              <text class="price-label">{{item.status === 'pendingPay' ? '应付款' : '实付款'}}</text>
+              <text class="price-symbol">¥</text>
+              <text class="price-value">{{item.price}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="divider"></view>
+
+        <view class="order-actions">
+          <button class="action-btn action-btn-default" data-id="{{item.id}}" bindtap="handleViewDetail">
+            查看详情
+          </button>
+
+          <block wx:if="{{item.status === 'pendingPay'}}">
+            <button class="action-btn action-btn-default" data-id="{{item.id}}" bindtap="handleCancel">
+              取消订单
+            </button>
+            <button class="action-btn action-btn-primary" data-id="{{item.id}}" bindtap="handlePay">
+              去支付
+            </button>
+          </block>
+
+          <block wx:elif="{{item.status === 'pendingService'}}">
+            <button class="action-btn action-btn-default" data-id="{{item.id}}" bindtap="handleRefund">
+              申请退款
+            </button>
+          </block>
+        </view>
+      </view>
+    </block>
+
+    <view class="empty" wx:else>
+      <text class="empty-text">暂无订单数据</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,57 @@
+<view class="page">
+  <!-- 自定义导航栏 -->
+  <!-- tabs -->
+  <view class="tabs">
+    <view wx:for="{{tabs}}" wx:key="value" class="tab-item {{currentTab === item.value ? 'active' : ''}}"
+      data-value="{{item.value}}" bindtap="switchTab">
+      {{item.label}}
+    </view>
+  </view>
+
+  <!-- 列表 -->
+  <view class="list">
+    <block wx:if="{{filteredList.length > 0}}">
+      <view class="card" wx:for="{{filteredList}}" wx:key="id">
+        <!-- 第一行 -->
+        <view class="card-row card-top">
+          <view class="date-type-wrap">
+            <text class="date-text">{{item.formattedTime}}</text>
+            <text class="type-tag {{item.typeClass}}">{{item.typeText}}</text>
+          </view>
+          <text class="phone-text">{{item.phone}}</text>
+        </view>
+        <!-- 第二行 -->
+        <view class="card-middle">
+          <view class="left">
+            <text class="time-text">{{item.time}}</text>
+            <text class="status-text {{item.statusClass}}">
+              {{item.statusText}}
+            </text>
+          </view>
+          <view wx:if="{{item.status == 0}}">
+            <button class="cancel-btn" data-id="{{item.id}}" bindtap="showCancelConfirm">
+              取消
+            </button>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空数据提示 -->
+    <view wx:else class="empty">暂无预约记录</view>
+  </view>
+
+  <!-- 弹窗遮罩 -->
+  <view wx:if="{{showModal}}" class="mask" catchtouchmove="preventTouchMove">
+    <view class="modal" catchtap="noop">
+      <view class="modal-icon">!</view>
+      <view class="modal-title">取消预约</view>
+      <view class="modal-desc">{{modalContent}}</view>
+
+      <view class="modal-footer">
+        <view class="modal-btn left-btn" bindtap="closeModal">再想想</view>
+        <view class="modal-btn right-btn" bindtap="confirmCancel">继续</view>
+      </view>
+    </view>
+  </view>
+</view>

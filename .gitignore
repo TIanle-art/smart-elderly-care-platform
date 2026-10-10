@@ -1,0 +1,25 @@
+# Java / Maven
+target/
+*.class
+
+# Node / 前端
+node_modules/
+dist/
+
+# 微信小程序
+miniprogram_npm/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# 日志与临时文件
+*.log
+logs/
+uploadPath/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
